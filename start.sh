@@ -1,7 +1,7 @@
 #!/bin/bash
 for ((i=0;i<11;++i))
 do
-	src/rcssdeadlyclient &
+  src/rcssdeadlyclient &
 done
 
 sleep 1

@@ -15,7 +15,8 @@
  * IT Dept, University of Debrecen
  *
  * Mamenyák András, BSc, University of Debrecen
- * Komzsik János, BSc, University of Debrecen
+ * 
+ * I would like to thank Komzsik János, BSc, University of Debrecen for his assistance and logo.
  */
 
 /*
