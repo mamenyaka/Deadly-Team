@@ -91,6 +91,7 @@ STAMINA	"(stamina"
 VIEW	"(view_mode"
 
 PASS	"pass"
+DASH    "dash"
 
 FC	"((f c)"
 FCT	"((f c t)"
@@ -426,12 +427,12 @@ FLOAT	[-.0123456789]+
     std::sscanf(yytext, "((b) %lf %lf", &dist, &ang);
     ball->set_distang(time, dist, ang, estx, esty, esta);
 }
-{BIGBALL}{WS}{FLOAT}{WS}{FLOAT}		{
+{BIGBALL}{WS}{FLOAT}{WS}{FLOAT}		        {
     std::sscanf(yytext, "((B) %lf %lf", &dist, &ang);
     ball->set_distang(time, dist, ang, estx, esty, esta);
     bigball_time = time;
 }
-{BIGPLYR}{WS}{FLOAT}{WS}{FLOAT}		{
+{BIGPLYR}{WS}{FLOAT}{WS}{FLOAT}		        {
     std::sscanf(yytext, "((P) %lf %lf", &dist, &ang);
     bigplayer_time = time;
 }
@@ -505,21 +506,37 @@ FLOAT	[-.0123456789]+
         play_mode = indirect_free_kick_l;
     //else std::cout << sender_buffer << " " << hear_buffer << "\n";
 }
-{HEAR}{WS}{INT4}{WS}{FLOAT}{WS}{WORD}{WS}{INT4}{WS}"\""{PASS}{WS}{INT4}"\""	{
-    std::sscanf(yytext, "(hear %d %lf %s %d \"pass %d\"", &time, &ang, sender_buffer, &squadnumber_buffer, &pass_buffer);
-    if (! std::strcmp(sender_buffer, "our") && pass != pass_buffer)
-    {
-        pass = pass_buffer;
-	pass_time = time;
-    }
+{HEAR}{WS}{INT4}{WS}{FLOAT}{WS}{WORD}{WS}{INT4}{WS}"\""{PASS}{WS}{INT4}"\""     {
+  std::sscanf(yytext, "(hear %d %lf %s %d \"pass %d\"", &time, &ang, sender_buffer, &squadnumber_buffer, &pass_buffer);
+  if (! std::strcmp(sender_buffer, "our") && pass != pass_buffer)
+  {
+    pass = pass_buffer;
+    pass_hear_time = time;
+  }
 }
-{HEAR}{WS}{INT4}{WS}{FLOAT}{WS}{WORD}{WS}"\""{PASS}{WS}{INT4}"\""		{
-    std::sscanf(yytext, "(hear %d %lf %s \"pass %d\"", &time, &ang, sender_buffer, &pass_buffer);
-    if (! std::strcmp(sender_buffer, "our") && pass != pass_buffer)
-    {
-        pass = pass_buffer;
-	pass_time = time;
-    }
+{HEAR}{WS}{INT4}{WS}{FLOAT}{WS}{WORD}{WS}"\""{PASS}{WS}{INT4}"\""       {
+  std::sscanf(yytext, "(hear %d %lf %s \"pass %d\"", &time, &ang, sender_buffer, &pass_buffer);
+  if (! std::strcmp(sender_buffer, "our") && pass != pass_buffer)
+  {
+    pass = pass_buffer;
+    pass_hear_time = time;
+  }
+}
+{HEAR}{WS}{INT4}{WS}{FLOAT}{WS}{WORD}{WS}{INT4}{WS}"\""{DASH}{WS}{INT4}"\""     {
+  std::sscanf(yytext, "(hear %d %lf %s %d \"dash %d\"", &time, &ang, sender_buffer, &squadnumber_buffer, &dash_buffer);
+  if (! std::strcmp(sender_buffer, "our") && dash != dash_buffer)
+  {
+    dash = dash_buffer;
+    dash_hear_time = time;
+  }
+}
+{HEAR}{WS}{INT4}{WS}{FLOAT}{WS}{WORD}{WS}"\""{DASH}{WS}{INT4}"\""       {
+  std::sscanf(yytext, "(hear %d %lf %s \"dash %d\"", &time, &ang, sender_buffer, &dash_buffer);
+  if (! std::strcmp(sender_buffer, "our") && dash != dash_buffer)
+  {
+    dash = pass_buffer;
+    dash_hear_time = time;
+  }
 }
 .	{
     ;

@@ -15,7 +15,7 @@
  * IT Dept, University of Debrecen
  *
  * Mamenyák András, BSc, University of Debrecen
- * 
+ *
  * I would like to thank Komzsik János, BSc, University of Debrecen for his assistance and logo.
  */
 
@@ -219,9 +219,9 @@ public:
     };
 
     side = 1;
-    pass = 0;
+    pass = dash = 0;
     nowheretogo = false;
-    bigball_time = bigplayer_time = dash_time = pass_time = -10;
+    bigball_time = bigplayer_time = dash_time = pass_hear_time = dash_hear_time = -10;
   };
 
   ~DeadlyLexer()
@@ -291,7 +291,7 @@ public:
 
   int get_pass() const
   {
-    if (time - pass_time < 10)
+    if (time - pass_hear_time < 10)
       return pass;
     else
       return 0;
@@ -441,6 +441,14 @@ public:
 
   bool deadlyNearest()
   {
+    if (time - dash_hear_time < 10)
+    {
+      if (dash == squad_number)
+        return true;
+      else
+        return false;
+    }
+
     if (time - dash_time < 10 && ball->get_dist() < 5.0)
       return true;
 
@@ -482,15 +490,15 @@ public:
 private:
   std::string team;
   RefereePlayMode play_mode;
-  int time, bigball_time, bigplayer_time, dash_time, pass_time;
-  int squad_number, stamina;
+  int time, bigball_time, bigplayer_time, dash_time, pass_hear_time, dash_hear_time;
+  int side, squad_number, stamina;
   char lr;
   int quality, width;
   double estx, esty, esta, estha;
-  int side, pass;
+  int pass, dash;
 
   char teamname_buffer[128];
-  int squadnumber_buffer, pass_buffer;
+  int squadnumber_buffer, pass_buffer, dash_buffer;
   char hear_buffer[1024], sender_buffer[128], quality_buffer[5], width_buffer[10];
   double dist, ang;
 

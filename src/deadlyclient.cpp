@@ -32,7 +32,7 @@
  * IT Dept, University of Debrecen
  *
  * Mamenyák András, BSc, University of Debrecen
- * 
+ *
  * I would like to thank Komzsik János, BSc, University of Debrecen for his assistance and logo.
  */
 
@@ -687,8 +687,10 @@ private:
     {
       if (dl.calcDist(52.0 * dl.get_side(), 0.0) < 30.0)
         deadlyGoal();
-      else
+      else if (dl.get_stamina() > 1000)
         deadlyDash(dl.calcAng(52.0 * dl.get_side(), 0.0));
+      else
+        deadlyTeamMatePass();
     }
     else
     {
@@ -717,7 +719,7 @@ private:
 
   void keeper()
   {
-    if (std::abs(dl.ball->get_ang()) > 30.0 && !dl.get_see_bigball())
+    if (std::abs(dl.ball->get_ang()) > 30.0)
     {
       std::snprintf(buf, 64, "(turn %lf)", dl.ball->get_ang());
       sndCmd(buf);
@@ -754,7 +756,7 @@ private:
     int limit;
     if (dl.get_squad_number() == 1)
       limit = 1.0;
-    else if (dl.get_stamina() > 1000)
+    else if (dl.get_stamina() > 5000)
       limit = 2.5;
     else
       limit = 10.0;
@@ -890,7 +892,7 @@ private:
     }
     else if (dl.get_x() * dl.get_side() > 35.0 && std::abs(dl.get_y()) < 20.0)
     {
-      std::snprintf(buf, 64, "(kick 100 %lf)", dl.calcAng(55.0 * dl.get_side(), 5.0 * dl.get_wing()));
+      std::snprintf(buf, 64, "(kick 100 %lf)", dl.calcAng(50.0 * dl.get_side(), 5.0 * dl.get_wing()));
       sndCmd(buf);
     }
     else
@@ -920,6 +922,9 @@ private:
     {
       if (seeGoal())
       {
+        std::snprintf(buf, 64, "(say dash %d)", dl.get_squad_number());
+        sndCmd(buf);
+
         if (std::abs(ang - angle) < 20.0)
           std::snprintf(buf, 64, "(kick 20 %lf)", (ang > 0.0) ? ang - 30.0 : ang + 30.0);
         else
@@ -956,6 +961,22 @@ private:
     }
   }
 
+  bool isOffside(int n)
+  {
+    double x = 0.0;
+    for (int i = 1; i < 11; i++)
+      if (dl.get_time() == dl.other_team[i].get_timestamp() &&
+          dl.other_team[i].get_x()*dl.get_side() > x)
+        x = dl.other_team[i].get_x()*dl.get_side();
+
+
+    if (dl.get_time() == dl.own_team[n].get_timestamp() &&
+        dl.own_team[n].get_x()*dl.get_side() > x)
+      return 1;
+    else
+      return 0;
+  }
+
   void deadlyTeamMatePass()
   {
     double jopassz[11];
@@ -979,7 +1000,7 @@ private:
       }
 
     for (int i = 1; i < 11; i++)
-      if (dl.get_time() == dl.own_team[i].get_timestamp() && dl.own_team[i].get_dist() > 10.0)
+      if (dl.get_time() == dl.own_team[i].get_timestamp() && dl.own_team[i].get_dist() > 10.0 && !isOffside(i))
       {
         double x = dl.own_team[i].get_x(), y = dl.own_team[i].get_y();
         double Cx = (estx + x)/2.0, Cy = (esty + y)/2.0, r = dl.own_team[i].get_dist()/2.0;
