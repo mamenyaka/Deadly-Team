@@ -607,7 +607,7 @@ private:
     }
     else if (dl.get_squad_number() == 11)
     {
-      if (dl.ball->get_dist() < 0.8)
+      if (dl.ball->get_dist() < 0.7)
         deadlyTeamMatePass();
       else
         move(dl.ball->get_x(), dl.ball->get_y());
@@ -627,7 +627,7 @@ private:
     }
     else if (dl.get_squad_number() == 1)
     {
-      if (dl.ball->get_dist() < 0.8)
+      if (dl.ball->get_dist() < 0.7)
         deadlyTeamMatePass();
       else
         move(dl.ball->get_x(), dl.ball->get_y());
@@ -649,9 +649,9 @@ private:
       std::snprintf(buf, 64, "(turn %lf)", dl.ball->get_ang());
       sndCmd(buf);
     }
-    else if (dl.ball->get_dist() < 0.8)
+    else if (dl.ball->get_dist() < 0.7)
     {
-      if (dl.calcDist(52.0 * dl.get_side(), 0.0) < 30.0 && k == 1)
+      if (dl.calcDist(52.0 * dl.get_side(), 0.0) < 35.0 && k == 1)
         deadlyGoal();
       else
         deadlyTeamMatePass();
@@ -683,37 +683,29 @@ private:
       std::snprintf(buf, 64, "(turn %lf)", dl.ball->get_ang());
       sndCmd(buf);
     }
-    else if (dl.ball->get_dist() < 0.8)
+    else if (dl.ball->get_dist() < 0.7)
     {
-      if (dl.calcDist(52.0 * dl.get_side(), 0.0) < 30.0)
+      if (dl.calcDist(52.0 * dl.get_side(), 0.0) < 35.0)
         deadlyGoal();
       else if (dl.get_stamina() > 1000)
-        deadlyDash(dl.calcAng(52.0 * dl.get_side(), 0.0));
+        deadlyDash(dl.calcAng(52.0 * dl.get_side(), -25.0*dl.get_wing()));
       else
         deadlyTeamMatePass();
     }
+    else if (dl.get_pass() == dl.get_squad_number() ||
+            (dl.get_pass() == 0 && dl.deadlyNearest()))
+    {
+      move(dl.ball->get_estx(), dl.ball->get_esty());
+    }
     else
     {
-      if (dl.get_pass() != 0)
-      {
-        if (dl.get_pass() == dl.get_squad_number())
-        {
-          move(dl.ball->get_estx(), dl.ball->get_esty());
-        }
-        else
-        {
-          std::snprintf(buf, 64, "(say pass %d)", dl.get_pass());
-          sndCmd(buf);
-        }
-      }
-      else if (dl.deadlyNearest())
-      {
-        move(dl.ball->get_estx(), dl.ball->get_esty());
-      }
-      else
-      {
-        moveToPosition(ad);
-      }
+      moveToPosition(ad);
+    }
+    
+    if (dl.get_pass() != 0)
+    {
+      std::snprintf(buf, 64, "(say pass %d)", dl.get_pass());
+      sndCmd(buf);
     }
   }
 
@@ -724,24 +716,25 @@ private:
       std::snprintf(buf, 64, "(turn %lf)", dl.ball->get_ang());
       sndCmd(buf);
     }
-    else if (dl.ball->get_dist() < 1.8)
+    else if (dl.ball->get_dist() < 0.7 && dl.ball->get_velocity() < 1.0)
+    {
+      deadlyKickXY(0.0, 20.0*dl.get_side(), 100);
+    }
+    else if (dl.ball->get_dist() < 2.0 && dl.ball->get_velocity() > 1.0)
     {
       std::snprintf(buf, 64, "(catch %lf)", dl.ball->get_ang());
       sndCmd(buf);
     }
+    else if (dl.ball->get_x() * dl.get_side() < -36.5 && std::abs(dl.ball->get_y()) < 20.0)
+    {
+      if (dl.ball->get_estx() * dl.get_side() < -52.0)
+        move(dl.get_x(), dl.get_y() + dl.ball->get_path());
+      else
+        move(dl.ball->get_estx(), dl.ball->get_esty());
+    }
     else
     {
-      if (dl.ball->get_x() * dl.get_side() < -36.5 && std::abs(dl.ball->get_y()) < 20.0)
-      {
-        if (dl.ball->get_estx() * dl.get_side() < -52.0)
-          move(dl.get_x(), dl.get_y() + dl.ball->get_path());
-        else
-          move(dl.ball->get_estx(), dl.ball->get_esty());
-      }
-      else
-      {
-        moveToPosition(2);
-      }
+      moveToPosition(2);
     }
   }
 
@@ -892,8 +885,7 @@ private:
     }
     else if (dl.get_x() * dl.get_side() > 35.0 && std::abs(dl.get_y()) < 20.0)
     {
-      std::snprintf(buf, 64, "(kick 100 %lf)", dl.calcAng(50.0 * dl.get_side(), 5.0 * dl.get_wing()));
-      sndCmd(buf);
+      deadlyKickXY(53.0 * dl.get_side(), 6.0 * dl.get_wing(), 100);
     }
     else
     {
@@ -904,34 +896,36 @@ private:
 
   void deadlyDash(double angle)
   {
-    double min = 100.0, ang = 100.0;
+    double db = 0;
 
     for (int i = 0; i < 11; i++)
       if (dl.get_time() == dl.other_team[i].get_timestamp() &&
           std::abs(dl.other_team[i].get_x()) > std::abs(dl.get_x()) &&
           std::abs(dl.other_team[i].get_ang()) < 30.0)
       {
-        if (dl.other_team[i].get_dist() < min)
-        {
-          min = dl.other_team[i].get_dist();
-          ang = dl.other_team[i].get_ang();
-        }
+        if (dl.other_team[i].get_dist() < 10.0)
+          db++;
       }
+      
+    if (dl.get_see_bigplayer())
+      db++;
 
-    if (min > 10.0 && !dl.get_see_bigplayer() && !dl.nowheretogo)
+    if (db < 3 && !dl.nowheretogo)
     {
       if (seeGoal())
       {
         std::snprintf(buf, 64, "(say dash %d)", dl.get_squad_number());
         sndCmd(buf);
 
-        if (std::abs(ang - angle) < 20.0)
-          std::snprintf(buf, 64, "(kick 20 %lf)", (ang > 0.0) ? ang - 30.0 : ang + 30.0);
-        else
-          std::snprintf(buf, 64, "(kick 20 %lf)", angle);
-
+        std::snprintf(buf, 64, "(kick 20 %lf)", angle);
         sndCmd(buf);
+
         dl.set_dash_time();
+      }
+      else
+      {
+        std::snprintf(buf, 64, "(turn %lf)", dl.calcAng(52.0 * dl.get_side(), 0.0));
+        sndCmd(buf);
       }
     }
     else
@@ -949,16 +943,10 @@ private:
     else
       szam = 7;
 
-    if (!dl.get_see_flag(szam))
-    {
-      std::snprintf(buf, 64, "(turn %lf)", dl.calcAng(52.0 * dl.get_side(), 0.0));
-      sndCmd(buf);
-      return false;
-    }
-    else
-    {
+    if (dl.get_see_flag(szam))
       return true;
-    }
+    else
+      return false;
   }
 
   bool isOffside(int n)
@@ -1047,7 +1035,7 @@ private:
     {
       std::snprintf(buf, 64, "(say pass %d)", index + 1);
       sndCmd(buf);
-      deadlyPassXY(dl.own_team[index].get_x(), dl.own_team[index].get_y());
+      deadlyKickXY(dl.own_team[index].get_x(), dl.own_team[index].get_y(), -1);
 
       if (dl.nowheretogo)
         dl.nowheretogo = false;
@@ -1061,14 +1049,14 @@ private:
     }
   }
 
-  void deadlyPassXY(double x, double y)
+  void deadlyKickXY(double x, double y, int pow)
   {
     double power = dl.calcDist(x, y)*2.5 + 10.0;
 
     if (power > 100.0)
       power = 100.0;
 
-    std::snprintf(buf, 64, "(kick %lf %lf)", power, dl.calcAng(x, y));
+    std::snprintf(buf, 64, "(kick %lf %lf)", (pow < 0) ? power : pow, dl.calcAng(x, y));
     sndCmd(buf);
   }
 
