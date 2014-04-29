@@ -130,16 +130,20 @@ public:
     double szog = (esta + ang) * PI / 180.0;
     x = estx + dist * std::cos(szog);
     y = esty + dist * std::sin(szog);
-
-    double A = (y - oldy)/(x - oldx);
-    double B = -1.0;
-    double C = oldy - A*oldx;
-    path = (A*estx + B*esty + C)/std::sqrt(A*A + B*B);
-
     v = std::sqrt(std::pow(x - oldx, 2) + std::pow(y - oldy, 2));
 
     this->estx = x + (x - oldx)*2.5;
     this->esty = y + (y - oldy)*2.5;
+    
+    if (this->estx > 52.5)
+      this->estx = 52.0;
+    if (this->estx < -52.5)
+      this->estx = -52.0;
+    
+    if (this->esty > 34.0)
+      this->esty = 33.5;
+    if (this->esty < -34.0)
+      this->esty = -33.5;
   }
 
   void set_distang(int timestamp, double dist, double ang)
@@ -187,15 +191,11 @@ public:
   {
     return v;
   }
-  double get_path()  const
-  {
-    return path;
-  }
 
 private:
   int timestamp;
   double x, y, oldx, oldy, estx, esty;
-  double dist, ang, v, path;
+  double dist, ang, v;
 };
 
 class DeadlyLexer : public yyFlexLexer
@@ -241,10 +241,6 @@ public:
   {
     return time;
   }
-  char get_lr() const
-  {
-    return lr;
-  }
   int get_squad_number() const
   {
     return squad_number;
@@ -267,15 +263,10 @@ public:
     return team;
   }
 
-  void set_side_away()
-  {
-    side = -1;
-  }
   int get_side() const
   {
     return side;
   }
-
   double get_x() const
   {
     return estx;

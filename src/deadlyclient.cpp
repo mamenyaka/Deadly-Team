@@ -78,7 +78,6 @@
 #include <sys/types.h> // select()
 #endif
 
-#include <pthread.h>
 #include <ctime>
 #include <cstdlib>
 #include <iostream>
@@ -98,9 +97,6 @@ private:
   bool M_clean_cycle;
   DeadlyLexer dl;
   char buf[64];
-  pthread_t pthread;
-  int t;
-  bool mehet, coach;
 
 #ifdef HAVE_LIBZ
   Decompressor M_decomp;
@@ -119,25 +115,22 @@ public:
       M_gz_buf( NULL ),
       M_transport( NULL ),
       M_comp_level( -1 ),
-      M_clean_cycle( true ),
-      t( 0 ),
-      mehet( true ),
-      coach( false )
+      M_clean_cycle( true )
   {
     M_dest.setHost( server );
     open();
     bind();
     M_socket_buf->setEndPoint( M_dest );
     std::srand(std::time(NULL));
-
-    if (port == 6002)
-      coach = true;
   }
 
   virtual
   ~Client()
   {
     close();
+    
+    sprintf(buf, "Server down: %s player %d exited\n", dl.get_team().c_str(), dl.get_squad_number());
+    std::cerr << buf;
   }
 
   void run()
@@ -148,10 +141,8 @@ public:
     std::snprintf(buf, 64, "(init %s (version 15))", dl.get_team().c_str());
     sndCmd(buf);
 
-    if (coach)
+    if (M_dest.getPort() == 6002)
       teamLogo();
-
-    pthread_create(&pthread, NULL, timeThread, (void *) this);
 
     messageLoop();
   }
@@ -330,113 +321,54 @@ private:
       parseCmd(buf);
   }
 
-  static void * timeThread(void *client)
-  {
-    Client *thisclient = (Client *) client;
-
-    int backup = thisclient->t;
-
-    while (1)
-    {
-      usleep(1000*1000);
-
-      if (thisclient->t == backup || thisclient->dl.get_time() == 6000)
-        break;
-      else
-        backup = thisclient->t;
-
-      if (thisclient->t > 1000)
-      {
-        thisclient->t = 1;
-        backup = 0;
-      }
-    }
-
-    std::cout << " Server down: " << thisclient->dl.get_team() << " player " << thisclient->dl.get_squad_number() << " exited\n";
-    thisclient->mehet = false;
-
-    return 0;
-  }
-
   void messageLoop()
   {
     fd_set read_fds;
-    fd_set read_fds_back;
     char buf[8192];
     std::memset( &buf, 0, sizeof( char ) * 8192 );
 
-    int in = fileno( stdin );
     FD_ZERO( &read_fds );
-    FD_SET( in, &read_fds );
     FD_SET( M_socket.getFD(), &read_fds );
-    read_fds_back = read_fds;
-
+    
 #ifdef RCSS_WIN
     int max_fd = 0;
 #else
     int max_fd = M_socket.getFD() + 1;
 #endif
 
-    while ( mehet )
+    while ( 1 )
     {
-      read_fds = read_fds_back;
-      int ret = ::select( max_fd, &read_fds, NULL, NULL, NULL );
-      if ( ret < 0 )
+      timeval tv;
+      tv.tv_sec = 10;
+      tv.tv_usec = 0;
+
+      int ret = ::select( max_fd, &read_fds, NULL, NULL, &tv );
+      if ( ret <= 0 )
       {
-        perror( "Error selecting input" );
+        if ( ret < 0 )
+          perror( "Error selecting input" );
         break;
       }
-      else if ( ret != 0 )
+      else if ( FD_ISSET( M_socket.getFD(), &read_fds ) )
       {
-        if ( FD_ISSET( in, &read_fds ) )
+        rcss::net::Addr from;
+        int len = M_socket.recv( buf, sizeof( buf ) - 1, from );
+        if ( len == -1
+          && errno != EWOULDBLOCK )
         {
-          if ( std::fgets( buf, sizeof( buf ), stdin ) != NULL )
+          if ( errno != ECONNREFUSED )
           {
-            size_t len = std::strlen( buf );
-            if ( buf[len-1] == '\n' )
-            {
-              buf[len-1] = '\0';
-              --len;
-            }
-
-            M_transport->write( buf, len + 1 );
-            M_transport->flush();
-            if ( ! M_transport->good() )
-            {
-              if ( errno != ECONNREFUSED )
-              {
-                std::cerr << __FILE__ << ": " << __LINE__
-                          << ": Error sending to socket: "
-                          << strerror( errno ) << std::endl
-                          << "msg = [" << buf << "]\n";
-              }
-              M_socket.close();
-            }
+            std::cerr << __FILE__ << ": " << __LINE__
+            << ": Error receiving from socket: "
+            << strerror( errno ) << std::endl;
           }
+          M_socket.close();
         }
-
-        if ( FD_ISSET( M_socket.getFD(), &read_fds ) )
+        else if ( len > 0 )
         {
-          rcss::net::Addr from;
-          int len = M_socket.recv( buf, sizeof( buf ) - 1, from );
-          if ( len == -1
-               && errno != EWOULDBLOCK )
-          {
-            if ( errno != ECONNREFUSED )
-            {
-              std::cerr << __FILE__ << ": " << __LINE__
-                        << ": Error receiving from socket: "
-                        << strerror( errno ) << std::endl;
-            }
-            M_socket.close();
-          }
-          else if ( len > 0 )
-          {
-            M_dest.setPort( from.getPort() );
-            M_socket_buf->setEndPoint( M_dest );
-            processMsg( buf, len );
-            t++;
-          }
+          M_dest.setPort( from.getPort() );
+          M_socket_buf->setEndPoint( M_dest );
+          processMsg( buf, len );
         }
       }
     }
@@ -589,9 +521,6 @@ private:
 
   void beforeKickOff()
   {
-    if (dl.get_lr() != 'l')
-      dl.set_side_away();
-
     std::snprintf(buf, 64, "(move %lf %lf)",
                   formationKickOff[dl.get_squad_number() - 1][0],
                   formationKickOff[dl.get_squad_number() - 1][1] * dl.get_side());
@@ -688,12 +617,12 @@ private:
       if (dl.calcDist(52.0 * dl.get_side(), 0.0) < 35.0)
         deadlyGoal();
       else if (dl.get_stamina() > 1000)
-        deadlyDash(dl.calcAng(52.0 * dl.get_side(), -25.0*dl.get_wing()));
+        deadlyDash(dl.calcAng(52.0 * dl.get_side(), -20.0*dl.get_wing()));
       else
         deadlyTeamMatePass();
     }
     else if (dl.get_pass() == dl.get_squad_number() ||
-            (dl.get_pass() == 0 && dl.deadlyNearest()))
+             (dl.get_pass() == 0 && dl.deadlyNearest()))
     {
       move(dl.ball->get_estx(), dl.ball->get_esty());
     }
@@ -701,7 +630,7 @@ private:
     {
       moveToPosition(ad);
     }
-    
+
     if (dl.get_pass() != 0)
     {
       std::snprintf(buf, 64, "(say pass %d)", dl.get_pass());
@@ -711,26 +640,23 @@ private:
 
   void keeper()
   {
-    if (std::abs(dl.ball->get_ang()) > 30.0)
+    if (std::abs(dl.ball->get_ang()) > 30.0 && !dl.get_see_bigball())
     {
       std::snprintf(buf, 64, "(turn %lf)", dl.ball->get_ang());
       sndCmd(buf);
     }
-    else if (dl.ball->get_dist() < 0.7 && dl.ball->get_velocity() < 1.0)
+    else if (dl.ball->get_dist() < 0.7)
     {
       deadlyKickXY(0.0, 20.0*dl.get_side(), 100);
     }
-    else if (dl.ball->get_dist() < 2.0 && dl.ball->get_velocity() > 1.0)
+    /*else if (dl.ball->get_dist() < 2.0 && dl.ball->get_velocity() > 1.0)
     {
       std::snprintf(buf, 64, "(catch %lf)", dl.ball->get_ang());
       sndCmd(buf);
-    }
+    }*/
     else if (dl.ball->get_x() * dl.get_side() < -36.5 && std::abs(dl.ball->get_y()) < 20.0)
     {
-      if (dl.ball->get_estx() * dl.get_side() < -52.0)
-        move(dl.get_x(), dl.get_y() + dl.ball->get_path());
-      else
-        move(dl.ball->get_estx(), dl.ball->get_esty());
+      move(dl.ball->get_estx(), dl.ball->get_esty());
     }
     else
     {
@@ -906,7 +832,7 @@ private:
         if (dl.other_team[i].get_dist() < 10.0)
           db++;
       }
-      
+
     if (dl.get_see_bigplayer())
       db++;
 
@@ -1624,7 +1550,6 @@ sig_exit_handle( int )
 {
   if ( client )
   {
-    std::cout << "TOROL\n";
     delete client;
     client =  static_cast< Client * >( 0 );
   }
@@ -1671,6 +1596,8 @@ main ( int argc, char **argv )
 
   client = new Client(server, port);
   client->run();
+
+  delete client;
 
   return 0;
 }

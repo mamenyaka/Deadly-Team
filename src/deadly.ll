@@ -170,7 +170,7 @@ FLOAT	[-.0123456789]+
     std::sscanf(yytext, "(init %c %d %s", &lr, &squad_number, hear_buffer);
     if (! std::strncmp(hear_buffer, "before_kick_off", 15))
         play_mode = before_kick_off;
-    if(lr == 'l')
+    if (lr == 'l')
         side = 1;
     else
         side = -1;
