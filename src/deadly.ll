@@ -199,6 +199,7 @@ FLOAT	[-.0123456789]+
 }
 {SEE}{WS}{INT4}					{
     std::sscanf(yytext, "(see %d", &time);
+    init();
 }
 {LIGHT}{WS}{FLOAT}{WS}{FLOAT}{WS}{FLOAT}	{
     std::sscanf(yytext, "(light %lf %lf %lf", &estx, &esty, &esta);
@@ -434,7 +435,7 @@ FLOAT	[-.0123456789]+
 }
 {BIGPLYR}{WS}{FLOAT}{WS}{FLOAT}		        {
     std::sscanf(yytext, "((P) %lf %lf", &dist, &ang);
-    bigplayer_time = time;
+    bigplayers++;
 }
 {PLYR}{WS}"\""{WORD}{WS}{INT2}")"{WS}{FLOAT}{WS}{FLOAT}		{
     std::sscanf(yytext, "((p \"%s %d) %lf %lf", teamname_buffer, &squadnumber_buffer, &dist, &ang);

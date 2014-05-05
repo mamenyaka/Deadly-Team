@@ -26,7 +26,7 @@
 %{
 
 #include "coach_lang_tok.h"
-#include "coach_lang_parser.h"
+#include "coach_lang_parser.hpp"
 #include "types.h"
 #include <cstdio>
 

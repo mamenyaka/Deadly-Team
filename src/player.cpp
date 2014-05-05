@@ -1087,105 +1087,26 @@ Player::position(double x, double y )
     position( x, y , 0.0 );
 }
 
-static double const PI = 3.14159265359;
-
 // This is a  simple copy of the above dash function
 // that is complemented by by the computation of the
 // direction of the target position.
 void
 Player::position( double x, double y, double power)
 {
-    if ( ! M_command_done )
-    {
-        const ServerParam & param = ServerParam::instance();
+  // the computation of the direction of the target position (x,y)
+  double dir = 0.0;
+  
+  if (x - pos().x != 0.0)
+  {
+    dir = std::atan((pos().y - y) / (pos().x - x)) * (180.0 / 3.14159265359) - Rad2Deg(angleBodyCommitted());
 
-        power = NormalizeDashPower( power );
-
-        // the computation of the direction of the target position (x,y)
-        double dir = 0.0;
-        double d = x-pos().x;
-		
-        if (d != 0.0) {
-            dir = (std::atan((y-pos().y) / d)) * (180.0 / PI);
-            if (x<pos().x)
-                dir += 180.0;	    
-        }
-
-        /*
-                std::cout << x-pos().x
-                          << " " << y-pos().y
-                          << " "
-                          << pos().x
-                          << " "
-                          << pos().y
-                          << " "
-                          << x
-                          << " "
-                          << y
-                          << " "
-                          << power
-                          << " "
-                          << dir
-                          << std::endl;
-        */
-
-        if ( param.dashAngleStep() < EPS )
-        {
-            // players can dash in any direction.
-        }
-        else
-        {
-            // The dash direction is discretized by server::dash_angle_step
-            dir = param.dashAngleStep() * rint( dir / param.dashAngleStep() );
-        }
-
-        bool back_dash = power < 0.0;
-
-        double power_need = ( back_dash
-                              ? power * -2.0
-                              : power );
-        power_need = std::min( power_need, stamina() + M_player_type->extraStamina() );
-        M_stamina = std::max( 0.0, stamina() - power_need );
-
-        power = ( back_dash
-                  ? power_need / -2.0
-                  : power_need );
-
-        double dir_rate = ( std::fabs( dir ) > 90.0
-                            ? param.backDashRate() - ( ( param.backDashRate() - param.sideDashRate() )
-                                                       * ( 1.0 - ( std::fabs( dir ) - 90.0 ) / 90.0 ) )
-                            : param.sideDashRate() + ( ( 1.0 - param.sideDashRate() )
-                                                       * ( 1.0 - std::fabs( dir ) / 90.0 ) )
-                          );
-        dir_rate = rcss::bound( 0.0, dir_rate, 1.0 );
-
-        double effective_dash_power = std::fabs( effort()
-                                      * power
-                                      * dir_rate
-                                      * M_player_type->dashPowerRate() );
-        if ( pos().y < 0.0 )
-        {
-            effective_dash_power /= ( side() == LEFT
-                                      ? param.slownessOnTopForLeft()
-                                      : param.slownessOnTopForRight() );
-        }
-
-        if ( back_dash )
-        {
-            dir += 180.0;
-        }
-
-/*
-        push( PVector::fromPolar( effective_dash_power,
-                                  normalize_angle( angleBodyCommitted() + Deg2Rad( dir ) ) ) );
-*/
-        push( PVector::fromPolar( effective_dash_power,
-                                  normalize_angle( Deg2Rad( dir ) ) ) );
-
-        M_dash_cycles = 1;
-        ++M_dash_count;
-        M_command_done = true;
-    }
+    if (x < pos().x)
+      dir += 180.0;
+    if (dir > 180.0)
+      dir -= 360.0;
+  }
+  
+  dash(power, dir);
 }
 
 void

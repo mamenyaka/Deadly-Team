@@ -173,6 +173,14 @@ public:
   {
     return y;
   }
+  double get_oldx()  const
+  {
+    return oldx;
+  }
+  double get_oldy()  const
+  {
+    return oldy;
+  }
   double get_estx()  const
   {
     if (dist < 10.0)
@@ -221,7 +229,8 @@ public:
     side = 1;
     pass = dash = 0;
     nowheretogo = false;
-    bigball_time = bigplayer_time = dash_time = pass_hear_time = dash_hear_time = -10;
+    bigball_time = dash_time = pass_hear_time = dash_hear_time = -10;
+    bigplayers = 0;
   };
 
   ~DeadlyLexer()
@@ -296,12 +305,9 @@ public:
       return 1;
   }
 
-  bool get_see_bigplayer() const
+  int get_see_bigplayers() const
   {
-    if (time == bigplayer_time)
-      return true;
-    else
-      return false;
+    return bigplayers;
   }
   bool get_see_bigball() const
   {
@@ -327,6 +333,10 @@ public:
       return false;
   }
 
+  int get_dash_time() const
+  {
+    return dash_time;
+  }
   void set_dash_time()
   {
     dash_time = time;
@@ -403,6 +413,11 @@ public:
     }
 
     return index;
+  }
+  
+  void init()
+  {
+    bigplayers = 0;
   }
 
   bool deadlyUtbaesik()
@@ -481,7 +496,7 @@ public:
 private:
   std::string team;
   RefereePlayMode play_mode;
-  int time, bigball_time, bigplayer_time, dash_time, pass_hear_time, dash_hear_time;
+  int time, bigball_time, bigplayers, dash_time, pass_hear_time, dash_hear_time;
   int side, squad_number, stamina;
   char lr;
   int quality, width;

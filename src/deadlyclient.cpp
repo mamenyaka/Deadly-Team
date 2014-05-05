@@ -339,7 +339,7 @@ private:
     while ( 1 )
     {
       timeval tv;
-      tv.tv_sec = 10;
+      tv.tv_sec = 5;
       tv.tv_usec = 0;
 
       int ret = ::select( max_fd, &read_fds, NULL, NULL, &tv );
@@ -624,7 +624,15 @@ private:
     else if (dl.get_pass() == dl.get_squad_number() ||
              (dl.get_pass() == 0 && dl.deadlyNearest()))
     {
-      move(dl.ball->get_estx(), dl.ball->get_esty());
+      if (dl.get_time() - dl.get_dash_time() < 10)
+      {
+        move(dl.ball->get_estx() + (dl.ball->get_x() - dl.ball->get_oldx())*8.0,
+             dl.ball->get_esty() + (dl.ball->get_y() - dl.ball->get_oldy())*8.0);
+      }
+      else
+      {
+        move(dl.ball->get_estx(), dl.ball->get_esty());
+      }
     }
     else
     {
@@ -649,11 +657,11 @@ private:
     {
       deadlyKickXY(0.0, 20.0*dl.get_side(), 100);
     }
-    /*else if (dl.ball->get_dist() < 2.0 && dl.ball->get_velocity() > 1.0)
+    else if (dl.ball->get_dist() < 2.0)
     {
       std::snprintf(buf, 64, "(catch %lf)", dl.ball->get_ang());
       sndCmd(buf);
-    }*/
+    }
     else if (dl.ball->get_x() * dl.get_side() < -36.5 && std::abs(dl.ball->get_y()) < 20.0)
     {
       move(dl.ball->get_estx(), dl.ball->get_esty());
@@ -692,36 +700,29 @@ private:
      * 7 - kick in our;
      * 8 - goal kick our; 9 - goal kick opp;
     */
-    int z = 0;
+    int z = dl.check_formation(k);
 
     switch (k)
     {
     case 1:
-      z = dl.check_formation(k);
       move2(formationAtt[z][dl.get_squad_number()][0] * dl.get_side(), formationAtt[z][dl.get_squad_number()][1]);
       break;
     case 2:
-      z = dl.check_formation(k);
       move2(formationDef[z][dl.get_squad_number()][0] * dl.get_side(), formationDef[z][dl.get_squad_number()][1]);
       break;
     case 3:
-      z = dl.check_formation(k);
       move2(formationSetplayOur[z][dl.get_squad_number()][0] * dl.get_side(), formationSetplayOur[z][dl.get_squad_number()][1]);
       break;
     case 4:
-      z = dl.check_formation(k);
       move2(formationSetplayOpp[z][dl.get_squad_number()][0] * dl.get_side(), formationSetplayOpp[z][dl.get_squad_number()][1]);
       break;
     case 5:
-      z = dl.check_formation(k);
       move2(formationIndirectOur[z][dl.get_squad_number()][0] * dl.get_side(), formationIndirectOur[z][dl.get_squad_number()][1]);
       break;
     case 6:
-      z = dl.check_formation(k);
       move2(formationIndirectOpp[z][dl.get_squad_number()][0] * dl.get_side(), formationIndirectOpp[z][dl.get_squad_number()][1]);
       break;
     case 7:
-      z = dl.check_formation(k);
       move2(formationKickIn[z][dl.get_squad_number()][0] * dl.get_side(), formationKickIn[z][dl.get_squad_number()][1]);
       break;
     case 8:
@@ -833,10 +834,9 @@ private:
           db++;
       }
 
-    if (dl.get_see_bigplayer())
-      db++;
+    db += dl.get_see_bigplayers();
 
-    if (db < 3 && !dl.nowheretogo)
+    if (db < 4 && !dl.nowheretogo)
     {
       if (seeGoal())
       {

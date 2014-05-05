@@ -1,4 +1,8 @@
-[15.1.0.light5.rf]
+[15.1.0.light6]
+  * Fix pos command, players move in a straight line - improved player speed
+
+[15.1.0.light5]
+  * Fix Light response with angle
 
 [15.1.0.light4]
   * 
