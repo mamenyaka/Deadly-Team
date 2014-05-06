@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 /*
- * client.cpp
+ * deadlyclient.cpp
  *
  * It is used in our Programming laboratory exercises at the University
  * of Debrecen. For details, see the books "Dr. Bátfai Norbert: Programozó
