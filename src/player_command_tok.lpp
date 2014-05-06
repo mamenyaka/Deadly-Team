@@ -51,6 +51,7 @@ EXP  ({REAL}|{INT})[eE]{INT}
 \) { return RCSS_PCOM_RP;}
 
 dash { return RCSS_PCOM_DASH; }
+pos { return RCSS_PCOM_POS; }
 turn { return RCSS_PCOM_TURN; }
 turn_neck { return RCSS_PCOM_TURN_NECK; }
 kick { return RCSS_PCOM_KICK; }

@@ -266,7 +266,10 @@ AM_FLEXFLEX=@AM_FLEXFLAGS@
 EXTRA_PROGRAMS = rcssclient
 
 rcssclient_SOURCES = \
-	client.cpp
+	deadlyclient.cpp \
+	deadly.h \
+	deadlyformations.h \
+	deadly.ll
 
 rcssclient_LDFLAGS = \
 	-L$(top_builddir)/rcssbase/net \
