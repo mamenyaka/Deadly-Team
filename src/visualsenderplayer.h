@@ -49,7 +49,7 @@ class SerializerPlayer;
 */
 
 class VisualSenderPlayer
-            : public VisualSender {
+    : public VisualSender {
 public:
 
     class Params {
@@ -63,11 +63,11 @@ public:
                 const Player & self,
                 const boost::shared_ptr< SerializerPlayer > serializer,
                 const Stadium & stadium )
-                : M_transport( transport )
-                , M_self( self )
-                , M_serializer( serializer )
-                , M_stadium( stadium )
-        { }
+            : M_transport( transport )
+            , M_self( self )
+            , M_serializer( serializer )
+            , M_stadium( stadium )
+          { }
     };
 
 
@@ -97,36 +97,36 @@ public:
 protected:
     const
     SerializerPlayer & serializer() const
-    {
-        return *M_serializer;
-    }
+      {
+          return *M_serializer;
+      }
 
     const
     Player & self() const
-    {
-        return M_self;
-    }
+      {
+          return M_self;
+      }
 
     const
     Stadium & stadium() const
-    {
-        return M_stadium;
-    }
+      {
+          return M_stadium;
+      }
 
     int sendCount() const
-    {
-        return M_sendcnt;
-    }
+      {
+          return M_sendcnt;
+      }
 
     void incSendCount()
-    {
-        ++M_sendcnt;
-    }
+      {
+          ++M_sendcnt;
+      }
 
     void resetSendCount()
-    {
-        M_sendcnt = 0;
-    }
+      {
+          M_sendcnt = 0;
+      }
 
 };
 
@@ -142,37 +142,37 @@ protected:
 */
 
 class ObserverPlayer
-            : protected BaseObserver< VisualSenderPlayer > {
+    : protected BaseObserver< VisualSenderPlayer > {
 public:
 
     ObserverPlayer()
-    { }
+      { }
 
     ObserverPlayer( VisualSenderPlayer & sender )
-            : BaseObserver< VisualSenderPlayer >( sender )
-    { }
+        : BaseObserver< VisualSenderPlayer >( sender )
+      { }
 
     ObserverPlayer( std::auto_ptr< VisualSenderPlayer > sender )
-            : BaseObserver< VisualSenderPlayer >( sender )
-    { }
+        : BaseObserver< VisualSenderPlayer >( sender )
+      { }
 
     ~ObserverPlayer()
-    { }
+      { }
 
     void setVisualSender( VisualSenderPlayer & sender )
-    {
-        BaseObserver< VisualSenderPlayer >::setSender( sender );
-    }
+      {
+          BaseObserver< VisualSenderPlayer >::setSender( sender );
+      }
 
     void setVisualSender( std::auto_ptr< VisualSenderPlayer > sender )
-    {
-        BaseObserver< VisualSenderPlayer >::setSender( sender );
-    }
+      {
+          BaseObserver< VisualSenderPlayer >::setSender( sender );
+      }
 
     void sendVisual()
-    {
-        BaseObserver< VisualSenderPlayer >::sender().sendVisual();
-    }
+      {
+          BaseObserver< VisualSenderPlayer >::sender().sendVisual();
+      }
 };
 
 
@@ -196,7 +196,7 @@ public:
 */
 
 class VisualSenderPlayerV1
-            : public VisualSenderPlayer {
+    : public VisualSenderPlayer {
 public:
 
     VisualSenderPlayerV1( const Params & params );
@@ -211,33 +211,31 @@ public:
 
 private:
     void sendFlag( const PObject & obj )
-    {
-        (this->*M_send_flag)( obj );
-    }
+      {
+          (this->*M_send_flag)( obj );
+      }
 
     void sendBall( const MPObject & obj )
-    {
-        (this->*M_send_ball)( obj );
-    }
+      {
+          (this->*M_send_ball)( obj );
+      }
 
     void sendPlayer( const Player & obj )
-    {
-        (this->*M_send_player)( obj );
-    }
+      {
+          (this->*M_send_player)( obj );
+      }
 
     void serializeLine( const std::string & name,
                         const int dir,
                         const double & sight_2_line_ang,
                         const double & player_2_line )
-    {
-        (this->*M_serialize_line)( name, dir,
-                                   sight_2_line_ang, player_2_line );
-    }
+      {
+          (this->*M_serialize_line)( name, dir,
+                                     sight_2_line_ang, player_2_line );
+      }
 
     // light
     void sendLight();
-    void sendLightWithAngle();
-    void sendLightWithAngles();
 
     void sendFlags();
 
@@ -272,51 +270,51 @@ private:
                             const double & player_2_line );
 
     double calcRadDir( const PObject & obj )
-    {
-        return normalize_angle( self().angleFromBody( obj )
-                                - self().angleNeckCommitted() );
-    }
+      {
+          return normalize_angle( self().angleFromBody( obj )
+                                  - self().angleNeckCommitted() );
+      }
 
     int calcDegDir( const double & rad_dir ) const
-    {
-        return rad2Deg( rad_dir );
-    }
+      {
+          return rad2Deg( rad_dir );
+      }
 
     double calcLineRadDir( const double & line_normal ) const
-    {
-        return normalize_angle( line_normal
-                                - self().angleBodyCommitted()
-                                - self().angleNeckCommitted() );
-    }
+      {
+          return normalize_angle( line_normal
+                                  - self().angleBodyCommitted()
+                                  - self().angleNeckCommitted() );
+      }
 
     int calcLineDir( const double & sight_2_line_ang ) const
-    {
-        if ( sight_2_line_ang > 0 )
-            return calcDegDir( sight_2_line_ang - M_PI*0.5 );
-        else
-            return calcDegDir( sight_2_line_ang + M_PI*0.5 );
-    }
+      {
+          if ( sight_2_line_ang > 0 )
+              return calcDegDir( sight_2_line_ang - M_PI*0.5 );
+          else
+              return calcDegDir( sight_2_line_ang + M_PI*0.5 );
+      }
 
     double calcUnQuantDist( const PObject & obj ) const
-    {
-        return self().pos().distance( obj.pos() );
-    }
+      {
+          return self().pos().distance( obj.pos() );
+      }
 
     double calcQuantDist( const double & dist,
                           const double & qstep ) const
-    {
-        return Quantize( std::exp( Quantize( std::log( dist + EPS ), qstep ) ), 0.1 );
-    }
+      {
+          return Quantize( std::exp( Quantize( std::log( dist + EPS ), qstep ) ), 0.1 );
+      }
 
     double calcLineDist( const double & sight_2_line_ang,
                          const double & player_2_line,
                          const double & qstep ) const
-    {
-        return Quantize( std::exp( Quantize( std::log( std::fabs( player_2_line
-                                             / std::cos( sight_2_line_ang ) )
-                                             + EPS ),
-                                             qstep ) ), 0.1 );
-    }
+      {
+          return Quantize( std::exp( Quantize( std::log( std::fabs( player_2_line
+                                                                    / std::cos( sight_2_line_ang ) )
+                                                         + EPS ),
+                                               qstep ) ), 0.1 );
+      }
 
 
     void calcVel( const PVector & obj_vel,
@@ -327,11 +325,11 @@ private:
                   double & dir_chg ) const;
 
     bool decide( const double & prob )
-    {
-        if ( prob >= 1.0 ) return true;
-        if ( prob <= 0.0 ) return false;
-        return boost::bernoulli_distribution<>( prob )( random::DefaultRNG::instance() );
-    }
+      {
+          if ( prob >= 1.0 ) return true;
+          if ( prob <= 0.0 ) return false;
+          return boost::bernoulli_distribution<>( prob )( random::DefaultRNG::instance() );
+      }
 
 protected:
     virtual
@@ -350,46 +348,46 @@ protected:
 
     virtual
     int rad2Deg( const double & rad ) const
-    {
-        return Rad2IDeg( rad );
-    }
+      {
+          return Rad2IDeg( rad );
+      }
 
     virtual
     const
     std::string & calcName( const PObject & obj ) const
-    {
-        return obj.name();
-    }
+      {
+          return obj.name();
+      }
 
     virtual
     const
     std::string & calcCloseName( const PObject & obj ) const
-    {
-        return obj.closeName();
-    }
+      {
+          return obj.closeName();
+      }
 
     virtual
     const
     std::string & calcTFarName( const Player & obj ) const
-    {
-        return obj.nameTooFar();
-    }
+      {
+          return obj.nameTooFar();
+      }
 
     virtual
     const
     std::string & calcUFarName( const Player & obj ) const
-    {
-        return obj.nameFar();
-    }
+      {
+          return obj.nameFar();
+      }
 
 private:
     void (VisualSenderPlayerV1::*M_send_flag)( const PObject & );
     void (VisualSenderPlayerV1::*M_send_ball)( const MPObject & );
     void (VisualSenderPlayerV1::*M_send_player)( const Player & );
     void (VisualSenderPlayerV1::*M_serialize_line)( const std::string &,
-            const int,
-            const double &,
-            const double & );
+                                                    const int,
+                                                    const double &,
+                                                    const double & );
 };
 
 /*!
@@ -405,7 +403,7 @@ private:
 */
 
 class VisualSenderPlayerV4
-            : public VisualSenderPlayerV1 {
+    : public VisualSenderPlayerV1 {
 public:
     VisualSenderPlayerV4( const Params & params );
 
@@ -423,11 +421,11 @@ protected:
 
 
     int calcBodyDir( const Player & player ) const
-    {
-        return rad2Deg( normalize_angle( player.angleBodyCommitted()
-                                         - self().angleBodyCommitted()
-                                         - self().angleNeckCommitted() ) );
-    }
+      {
+          return rad2Deg( normalize_angle( player.angleBodyCommitted()
+                                           - self().angleBodyCommitted()
+                                           - self().angleNeckCommitted() ) );
+      }
 };
 
 /*!
@@ -443,7 +441,7 @@ protected:
 */
 
 class VisualSenderPlayerV5
-            : public VisualSenderPlayerV4 {
+    : public VisualSenderPlayerV4 {
 public:
     VisualSenderPlayerV5( const Params & params );
 
@@ -460,12 +458,12 @@ protected:
                           const double & dir_chg );
 
     int calcHeadDir( const Player & player ) const
-    {
-        return rad2Deg( normalize_angle( player.angleNeckCommitted()
-                                         + player.angleBodyCommitted()
-                                         - self().angleBodyCommitted()
-                                         - self().angleNeckCommitted() ) );
-    }
+      {
+          return rad2Deg( normalize_angle( player.angleNeckCommitted()
+                                           + player.angleBodyCommitted()
+                                           - self().angleBodyCommitted()
+                                           - self().angleNeckCommitted() ) );
+      }
 
 };
 
@@ -483,7 +481,7 @@ protected:
 */
 
 class VisualSenderPlayerV6
-            : public VisualSenderPlayerV5 {
+    : public VisualSenderPlayerV5 {
 public:
     VisualSenderPlayerV6( const Params & params );
 
@@ -493,30 +491,30 @@ public:
     virtual
     const
     std::string & calcName( const PObject & obj ) const
-    {
-        return obj.shortName();
-    }
+      {
+          return obj.shortName();
+      }
 
     virtual
     const
     std::string & calcCloseName( const PObject & obj ) const
-    {
-        return obj.shortCloseName();
-    }
+      {
+          return obj.shortCloseName();
+      }
 
     virtual
     const
     std::string & calcUFarName( const Player & obj ) const
-    {
-        return obj.shortNameFar();
-    }
+      {
+          return obj.shortNameFar();
+      }
 
     virtual
     const
     std::string & calcTFarName( const Player & obj ) const
-    {
-        return obj.shortNameTooFar();
-    }
+      {
+          return obj.shortNameTooFar();
+      }
 };
 
 /*!
@@ -536,7 +534,7 @@ public:
 */
 
 class VisualSenderPlayerV7
-            : public VisualSenderPlayerV6 {
+    : public VisualSenderPlayerV6 {
 public:
     VisualSenderPlayerV7( const Params & params );
 
@@ -546,9 +544,9 @@ public:
 protected:
     virtual
     int rad2Deg( const double & rad ) const
-    {
-        return Rad2IDegRound( rad );
-    }
+      {
+          return Rad2IDegRound( rad );
+      }
 };
 
 /*!
@@ -566,7 +564,7 @@ protected:
 */
 
 class VisualSenderPlayerV8
-            : public VisualSenderPlayerV7 {
+    : public VisualSenderPlayerV7 {
 public:
     VisualSenderPlayerV8( const Params & params );
 
@@ -604,7 +602,7 @@ protected:
 */
 
 class VisualSenderPlayerV13
-            : public VisualSenderPlayerV8 {
+    : public VisualSenderPlayerV8 {
 public:
     VisualSenderPlayerV13( const Params & params );
 

@@ -3,7 +3,7 @@
 
 AC_PREREQ(2.61)
 LT_PREREQ([2.2])
-AC_INIT([RCSSServer],[15.1.0.light6],[sserver-admin@users.sf.net],[rcssserver])
+AC_INIT([RCSSServer],[15.2.2],[sserver-admin@users.sf.net],[rcssserver])
 
 #AM_INIT_AUTOMAKE([gnu 1.7.2 check-news dist-bzip2 dist-zip])
 AM_INIT_AUTOMAKE([gnu 1.7.2 check-news])
@@ -22,10 +22,6 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-
-# light
-AC_PROG_YACC
-ACX_PTHREAD
 
 #ACX_PTHREAD([LIBS="$PTHREAD_LIBS $LIBS"
 #             CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
@@ -242,44 +238,6 @@ if ! test -z "$RCSSCLIENT"; then
 #    ])
 #  fi
 fi
-
-# light
-
-##################################################
-# enable/disable rcssdeadlyclient
-##################################################
-
-AC_SUBST(RCSSDEADLYCLIENT)
-AC_ARG_ENABLE(rcssdeadlyclient,
-[  --enable-rcssclient[=ARG] build rcssclient, a sample client [ARG=yes]],
-if test -n $enableval; then
-  if test $enableval = yes; then
-    RCSSDEADLYCLIENT=rcssdeadlyclient$EXEEXT
-    echo enabling rcssdeadlyclient
-  elif test $enableval = no; then
-    RCSSDEADLYCLIENT=
-    echo disabling rcssdeadlyclient
-  fi
-fi
-, RCSSDEADLYCLIENT=rcssdeadlyclient$EXEEXT)
-
-
-if ! test -z "$RCSSDEADLYCLIENT"; then
-  AC_CHECK_FUNCS([select])
-  AC_FUNC_SELECT_ARGTYPES
-#  AC_ARG_WITH(ncurses,
-#        AS_HELP_STRING(--with-ncurses,use ncurses for rcssclient (default=yes)),
-#                       use_ncurses=$withval, use_ncurses=yes)
-#  if test "$use_ncurses" = "yes"; then
-#    AC_CHECK_LIB(ncurses, initscr,[
-#      AC_DEFINE(HAVE_LIBNCURSES, 1, [
-#        "Define to 1 if you have the `ncurses' library (-lncurses)."] )
-      AC_ARG_VAR(RCSSDEADLYCLIENT_LIBS, The libs rcssdeadlyclient needs)
-#      RCSSDEADLYCLIENT_LIBS="-lncurses"
-#    ])
-#  fi
-fi
-
 
 ##################################################
 # generated files

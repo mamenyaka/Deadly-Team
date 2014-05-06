@@ -27,7 +27,6 @@
 
 #include "stadium.h"
 #include "serializer.h"
-#include "team.h"
 
 namespace rcss {
 
@@ -49,11 +48,11 @@ VisualSenderPlayer::factory()
 }
 
 VisualSenderPlayer::VisualSenderPlayer( const Params & params )
-        : VisualSender( params.M_transport ),
-        M_serializer( params.M_serializer ),
-        M_self( params.M_self ),
-        M_stadium( params.M_stadium ),
-        M_sendcnt( 0 )
+    : VisualSender( params.M_transport ),
+      M_serializer( params.M_serializer ),
+      M_self( params.M_self ),
+      M_stadium( params.M_stadium ),
+      M_sendcnt( 0 )
 {
     //std::cerr << "create VisualSenderPlayer" << std::endl;
 }
@@ -83,7 +82,7 @@ VisualSenderPlayer::~VisualSenderPlayer()
 */
 
 VisualSenderPlayerV1::VisualSenderPlayerV1( const Params & params )
-        : VisualSenderPlayer( params )
+    : VisualSenderPlayer( params )
 {
 
 }
@@ -126,10 +125,6 @@ VisualSenderPlayerV1::sendVisual()
     // light
     if (ServerParam::instance().lightResponse())
         sendLight();
-    else if(ServerParam::instance().lightResponseWithAngle())
-        sendLightWithAngle();
-    else if(ServerParam::instance().lightResponseWithAngles())
-        sendLightWithAngles();
 
     sendFlags();
     sendBalls();
@@ -152,37 +147,14 @@ VisualSenderPlayerV1::sendLight()
 				      );
 }
 
-void
-VisualSenderPlayerV1::sendLightWithAngle()
-{
-    serializer().serializeVisualObject( transport(),
-                                        "light",
-                                        self().pos().x,
-                                        self().pos().y,
-                                        self().angleBodyCommitted()
-				      );
-}
-
-void
-VisualSenderPlayerV1::sendLightWithAngles()
-{
-    serializer().serializeVisualObject( transport(),
-                                        "light",
-                                        self().pos().x,
-                                        self().pos().y,
-                                        self().angleBodyCommitted(),
-                                        self().angleNeckCommitted()
-				      );
-}
-
 
 void
 VisualSenderPlayerV1::sendFlags()
 {
     const std::vector< PObject * >::const_iterator end = stadium().field().landmarks().end();
     for ( std::vector< PObject * >::const_iterator it = stadium().field().landmarks().begin();
-            it != end;
-            ++it )
+          it != end;
+          ++it )
     {
         if ( (*it)->objectVersion() <= self().version() )
         {
@@ -205,12 +177,12 @@ VisualSenderPlayerV1::sendPlayers()
 {
     const Stadium::PlayerCont::const_iterator end = stadium().players().end();
     for ( Stadium::PlayerCont::const_iterator p = stadium().players().begin();
-            p != end;
-            ++p )
+          p != end;
+          ++p )
     {
         if ( *p != &self()
-                && (*p)->isEnabled()
-                && (*p)->objectVersion() <= self().version() )
+             && (*p)->isEnabled()
+             && (*p)->objectVersion() <= self().version() )
         {
             sendPlayer( **p );
         }
@@ -225,7 +197,7 @@ VisualSenderPlayerV1::sendLines()
     int max_line_count;
     int min_line_count;
     if ( std::fabs( self().pos().x ) < ServerParam::PITCH_LENGTH*0.5
-            && std::fabs( self().pos().y ) < ServerParam::PITCH_WIDTH*0.5 )
+         && std::fabs( self().pos().y ) < ServerParam::PITCH_WIDTH*0.5 )
     {
         min_line_count = max_line_count = 1;
     }
@@ -236,25 +208,25 @@ VisualSenderPlayerV1::sendLines()
     }
 
     if ( line_count < max_line_count
-            && stadium().field().line_l.objectVersion() <= self().version() )
+         && stadium().field().line_l.objectVersion() <= self().version() )
     {
         if ( sendLine( stadium().field().line_l ) )
             ++line_count;
     }
     if ( line_count < max_line_count
-            && stadium().field().line_r.objectVersion() <= self().version() )
+         && stadium().field().line_r.objectVersion() <= self().version() )
     {
-        if ( sendLine( stadium().field().line_r ) )
+        if( sendLine( stadium().field().line_r ) )
             ++line_count;
     }
     if ( line_count < max_line_count
-            && stadium().field().line_t.objectVersion() <= self().version() )
+         && stadium().field().line_t.objectVersion() <= self().version() )
     {
         if ( sendLine( stadium().field().line_t ) )
             ++line_count;
     }
     if ( line_count < max_line_count
-            && stadium().field().line_b.objectVersion() <= self().version() )
+         && stadium().field().line_b.objectVersion() <= self().version() )
     {
         if ( sendLine( stadium().field().line_b ) )
             ++line_count;
@@ -297,7 +269,7 @@ VisualSenderPlayerV1::sendHighFlag( const PObject & flag )
     {
         un_quant_dist = std::sqrt( un_quant_dist );
         const double quant_dist
-        = calcQuantDist( un_quant_dist, self().landDistQStep() );
+            = calcQuantDist( un_quant_dist, self().landDistQStep() );
 
         //const double prob = ( ( quant_dist - UNUM_FAR_LENGTH )
         //                      / ( UNUM_TOOFAR_LENGTH - UNUM_FAR_LENGTH ) );
@@ -341,13 +313,13 @@ VisualSenderPlayerV1::sendLowBall( const MPObject & ball )
 {
     const double ang = calcRadDir( ball );
 
-    if ( std::fabs( ang ) < self().visibleAngle() * 0.5 )
+    if( std::fabs( ang ) < self().visibleAngle() * 0.5 )
     {
         serializer().serializeVisualObject( transport(),
                                             calcName( ball ),
                                             calcDegDir( ang ) );
     }
-    else if ( calcUnQuantDist( ball ) <= self().VISIBLE_DISTANCE )
+    else if( calcUnQuantDist( ball ) <= self().VISIBLE_DISTANCE )
     {
         serializer().serializeVisualObject( transport(),
                                             calcCloseName( ball ),
@@ -367,7 +339,7 @@ VisualSenderPlayerV1::sendHighBall( const MPObject & ball )
     {
         un_quant_dist = std::sqrt( un_quant_dist );
         const double quant_dist = calcQuantDist( un_quant_dist,
-                                  self().distQStep() );
+                                                 self().distQStep() );
 
         //double prob = ( ( quant_dist - UNUM_FAR_LENGTH )
         //                / ( UNUM_TOOFAR_LENGTH - UNUM_FAR_LENGTH ) );
@@ -415,7 +387,7 @@ VisualSenderPlayerV1::sendLowPlayer( const Player & player )
     if ( std::fabs( ang ) < self().visibleAngle() * 0.5 )
     {
         const double quant_dist = calcQuantDist( std::sqrt( un_quant_dist2 ),
-                                  self().distQStep() );
+                                                 self().distQStep() );
 
         //double prob = ( ( quant_dist - TEAM_FAR_LENGTH )
         //              / ( TEAM_TOOFAR_LENGTH - TEAM_FAR_LENGTH ) );
@@ -467,7 +439,7 @@ VisualSenderPlayerV1::sendHighPlayer( const Player & player )
     {
         un_quant_dist = std::sqrt( un_quant_dist );
         const double quant_dist = calcQuantDist( un_quant_dist,
-                                  self().distQStep() );
+                                                 self().distQStep() );
         //double prob = ( ( quant_dist - TEAM_FAR_LENGTH )
         //              / ( TEAM_TOOFAR_LENGTH - TEAM_FAR_LENGTH ) );
         double prob = ( ( quant_dist - self().teamFarLength() )
@@ -559,7 +531,7 @@ VisualSenderPlayerV1::sendLine( const PObject & line )
     else if ( line.pos().x == ServerParam::PITCH_LENGTH*0.5 )
     {
         line_normal = 0.0;
-        if ( self().pos().x > line.pos().x )
+        if( self().pos().x > line.pos().x )
             line_normal = M_PI;
         player_2_line = line.pos().x - self().pos().x;
         line_start = - ServerParam::PITCH_WIDTH*0.5;
@@ -624,7 +596,7 @@ VisualSenderPlayerV1::sendLine( const PObject & line )
       line beyond it's beginning or end then the player wont see
       this line */
     if ( line_intersect < line_start
-            || line_intersect > line_stop )
+         || line_intersect > line_stop )
     {
         return false;
     }
@@ -645,9 +617,9 @@ VisualSenderPlayerV1::serializeLowLine( const std::string & name,
 
 void
 VisualSenderPlayerV1::serializeHighLine( const std::string & name,
-        const int dir,
-        const double & sight_2_line_ang,
-        const double & player_2_line )
+                                         const int dir,
+                                         const double & sight_2_line_ang,
+                                         const double & player_2_line )
 {
     double dist = calcLineDist( sight_2_line_ang, player_2_line,
                                 self().landDistQStep() );
@@ -756,7 +728,7 @@ VisualSenderPlayerV1::serializePlayer( const Player &,
 */
 
 VisualSenderPlayerV4::VisualSenderPlayerV4( const Params & params )
-        : VisualSenderPlayerV1( params )
+    : VisualSenderPlayerV1( params )
 {
 
 }
@@ -802,7 +774,7 @@ VisualSenderPlayerV4::serializePlayer( const Player & player,
 
 
 VisualSenderPlayerV5::VisualSenderPlayerV5( const Params & params )
-        : VisualSenderPlayerV4( params )
+    : VisualSenderPlayerV4( params )
 {
 
 }
@@ -841,7 +813,7 @@ VisualSenderPlayerV5::serializePlayer( const Player & player,
 */
 
 VisualSenderPlayerV6::VisualSenderPlayerV6( const Params & params )
-        : VisualSenderPlayerV5( params )
+    : VisualSenderPlayerV5( params )
 {
 
 }
@@ -868,7 +840,7 @@ VisualSenderPlayerV6::~VisualSenderPlayerV6()
 */
 
 VisualSenderPlayerV7::VisualSenderPlayerV7( const Params & params )
-        : VisualSenderPlayerV6( params )
+    : VisualSenderPlayerV6( params )
 {
 
 }
@@ -894,7 +866,7 @@ VisualSenderPlayerV7::~VisualSenderPlayerV7()
 */
 
 VisualSenderPlayerV8::VisualSenderPlayerV8( const Params & params )
-        : VisualSenderPlayerV7( params )
+    : VisualSenderPlayerV7( params )
 {
 
 }
@@ -914,9 +886,9 @@ VisualSenderPlayerV8::calcPointDir( const Player & player )
                                  dir ) )
     {
         dir += player.angleNeckCommitted()
-               + player.angleBodyCommitted()
-               - self().angleBodyCommitted()
-               - self().angleNeckCommitted();
+            + player.angleBodyCommitted()
+            - self().angleBodyCommitted()
+            - self().angleNeckCommitted();
 
         // add random noise
 
@@ -926,9 +898,9 @@ VisualSenderPlayerV8::calcPointDir( const Player & player )
         // NOTE: This means that 5% of the time it will be outside
         // of this range.
         double sigma = self().pos().distance( player.pos() )
-                       / self().teamTooFarLength();
-        //            / 60.0; // this should be replaced by the line below.
-        //        //        / ServerParam::instance().getTeamTooFarLength ();
+            / self().teamTooFarLength();
+            //            / 60.0; // this should be replaced by the line below.
+            //        //        / ServerParam::instance().getTeamTooFarLength ();
         sigma = std::pow( sigma, 4 ); // 4 should be parameterized
         // sigma is now a range between 0 and 1.0
 
@@ -943,8 +915,8 @@ VisualSenderPlayerV8::calcPointDir( const Player & player )
         //will be within +- 2*sigma of dir
         boost::normal_distribution<> rng( dir, sigma );
         boost::variate_generator< rcss::random::DefaultRNG &,
-        boost::normal_distribution<> >
-        gen( rcss::random::DefaultRNG::instance(), rng );
+            boost::normal_distribution<> >
+            gen( rcss::random::DefaultRNG::instance(), rng );
 
         return rad2Deg( normalize_angle( gen() ) );
     }
@@ -1083,7 +1055,7 @@ VisualSenderPlayerV8::serializePlayer( const Player & player,
 */
 
 VisualSenderPlayerV13::VisualSenderPlayerV13( const Params & params )
-        : VisualSenderPlayerV8( params )
+    : VisualSenderPlayerV8( params )
 {
 
 }
@@ -1124,6 +1096,7 @@ RegHolder vp12 = VisualSenderPlayer::factory().autoReg( &create< VisualSenderPla
 RegHolder vp13 = VisualSenderPlayer::factory().autoReg( &create< VisualSenderPlayerV13 >, 13 );
 RegHolder vp14 = VisualSenderPlayer::factory().autoReg( &create< VisualSenderPlayerV13 >, 14 );
 RegHolder vp15 = VisualSenderPlayer::factory().autoReg( &create< VisualSenderPlayerV13 >, 15 );
+//RegHolder vp16 = VisualSenderPlayer::factory().autoReg( &create< VisualSenderPlayerV13 >, 16 );
 }
 
 }

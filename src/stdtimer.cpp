@@ -283,7 +283,6 @@ StandardTimer::run()
                 c_sent = 1;
             else
                 c_sent++;
-	    
         }
 
         // send synch visual message

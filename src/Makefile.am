@@ -64,7 +64,7 @@ pkginclude_HEADERS = \
 	clangaction.h \
 	clangutil.h \
 	coach_lang_comp.h \
-	coach_lang_parser.hpp \
+	coach_lang_parser.h \
 	arithop.h \
 	compop.h \
 	cond.h \
@@ -80,7 +80,7 @@ nodist_librcssclangparser_la_SOURCES = \
 
 
 bin_PROGRAMS = \
-	rcssserver @RCSSCLIENT@ @RCSSDEADLYCLIENT@
+	rcssserver @RCSSCLIENT@
 
 bin_SCRIPTS = rcsoccersim
 
@@ -103,7 +103,6 @@ rcssserver_SOURCES = \
 	logger.cpp \
 	main.cpp \
 	monitor.cpp \
-	netif.cpp \
 	pcombuilder.cpp \
 	pcomparser.cpp \
 	player.cpp \
@@ -236,9 +235,9 @@ rcssserver_LDADD = \
 
 
 BUILT_SOURCES = \
-	coach_lang_parser.hpp \
+	coach_lang_parser.h \
 	coach_lang_tok.cpp \
-	player_command_parser.hpp \
+	player_command_parser.h \
 	player_command_tok.cpp
 
 AM_YFLAGS=-d
@@ -264,7 +263,7 @@ AM_FLEXFLEX=@AM_FLEXFLAGS@
 	rm -f lex.yy.c
 
 
-EXTRA_PROGRAMS = rcssclient rcssdeadlyclient
+EXTRA_PROGRAMS = rcssclient
 
 rcssclient_SOURCES = \
 	client.cpp
@@ -277,23 +276,6 @@ rcssclient_LDADD = @RCSSCLIENT_LIBS@ \
 	-lrcssnet \
 	-lrcssgz \
 	$(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) @GZ_LIBS@
-
-rcssdeadlyclient_SOURCES = \
-	deadlyclient.cpp \
-	deadly.h \
-	deadlyformations.h \
-	deadly.ll
-
-rcssdeadlyclient_LDFLAGS = \
-	-L$(top_builddir)/rcssbase/net \
-	-L$(top_builddir)/rcssbase/gzip
-
-rcssdeadlyclient_LDADD = @RCSSCLIENT_LIBS@ \
-	-lrcssnet \
-	-lrcssgz \
-	-lpthread \
-	$(BOOST_FILESYSTEM_LIB) $(BOOST_SYSTEM_LIB) @GZ_LIBS@
-
 
 
 AM_CPPFLAGS = -I$(top_srcdir)
@@ -311,10 +293,10 @@ EXTRA_DIST = \
 
 CLEANFILES = \
 	coach_lang_parser.cpp \
-	coach_lang_parser.hpp \
+	coach_lang_parser.h \
 	coach_lang_tok.cpp \
 	player_command_parser.cpp \
-	player_command_parser.hpp \
+	player_command_parser.h \
 	player_command_tok.cpp \
 	*~ \
 	core
@@ -324,8 +306,8 @@ DISTCLEANFILES = \
 
 #MAINTAINERCLEANFILES = \
 #	coach_lang_parser.cpp \
-#	coach_lang_parser.hpp \
+#	coach_lang_parser.h \
 #	coach_lang_tok.cpp \
 #	player_command_parser.cpp \
-#	player_command_parser.hpp \
+#	player_command_parser.h \
 #	player_command_tok.cpp

@@ -217,8 +217,8 @@ private:
 
     void parseMsg( const char * msg,
                    const size_t len )
-      {	
-	if ( ! std::strncmp( msg, "(ok compression", 15 ) )
+      {
+          if ( ! std::strncmp( msg, "(ok compression", 15 ) )
           {
               int level;
               if ( std::sscanf( msg, " ( ok compression %d )", &level ) == 1 )

@@ -354,24 +354,7 @@ public:
           strm << " (" << name << ' ' << dist << ' ' << dir << ')';
       }
 
-//light
-    void serializeVisualObject( std::ostream & strm,
-                                const std::string & name,
-                                const double & x,
-                                const double & y ) const
-      {
-          strm << " (" << name << ' ' << x << ' ' << y << ')';
-      }
-
-    void serializeVisualObject( std::ostream & strm,
-                                const std::string & name,
-                                const double & x,
-                                const double & y,
-                                const double & a ) const
-      {
-          strm << " (" << name << ' ' << x << ' ' << y << ' ' << a << ')';
-      }
-
+    //light
     void serializeVisualObject( std::ostream & strm,
                                 const std::string & name,
                                 const double & x,

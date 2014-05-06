@@ -124,88 +124,88 @@ NormalizeNeckAngle( const double & p )
 Player::Player( Stadium & stadium,
                 Team * team,
                 int number )
-        : MPObject( stadium,
-                    "", "",
-                    O_TYPE_PLAYER_NAME, O_TYPE_PLAYER_NAME_SHORT ),
-        VISIBLE_DISTANCE( ServerParam::instance().visibleDistance() ),
-        VISIBLE_DISTANCE2( VISIBLE_DISTANCE * VISIBLE_DISTANCE ),
-        //
-        M_init_observer( new rcss::InitObserverPlayer ),
-        M_observer( new rcss::ObserverPlayer ),
-        M_body_observer( new rcss::BodyObserverPlayer ),
-        M_fullstate_observer( new rcss::FullStateObserver ),
-        M_parser( *this ),
-        //
-        M_version( 3.0 ),
-        M_team( team ),
-        M_side( team->side() ),
-        M_unum( number ),
-        M_goalie( false ),
-        //
-        M_unum_far_length( 20.0 ),
-        M_unum_too_far_length( 40.0 ),
-        M_team_far_length( 40.0 ),
-        M_team_too_far_length( 60.0 ),
-        //
-        M_clang_min_ver( 0 ),
-        M_clang_max_ver( 0 ),
-        //
-        M_player_type( NULL ),
-        M_player_type_id( 0 ),
-        M_substituted( false ),
-        M_kick_rand( ServerParam::instance().kickRand() ), // pfr 8/14/00: for RC2000 evaluation
-        //
-        M_state( DISABLE ),
-        M_card_count( 0 ),
-        //
-        M_synch_see( false ),
-        M_visual_send_interval( 4 ),
-        M_high_quality( true ),
-        M_visible_angle( Deg2Rad( ServerParam::instance().visibleAngleDegree() ) ),
-        M_view_width( rcss::pcom::NORMAL ),
-        //
-        M_hear_capacity_from_teammate( ServerParam::instance().hearMax() ),
-        M_hear_capacity_from_opponent( ServerParam::instance().hearMax() ),
-        //
-        M_stamina( ServerParam::instance().staminaMax() ),
-        M_recovery( ServerParam::instance().recoverInit() ),
-        M_effort( ServerParam::instance().effortInit() ),
-        M_stamina_capacity( ServerParam::instance().staminaCapacity() ),
-        M_consumed_stamina( 0.0 ),
-        //
-        M_angle_body( 0.0 ),
-        M_angle_body_committed( 0.0 ),
-        M_angle_neck( 0.0 ),
-        M_angle_neck_committed( 0.0 ),
-        //
-        M_ball_collide( false ),
-        M_player_collide( false ),
-        M_post_collide( false ),
-        //
-        M_command_done( false ),
-        M_turn_neck_done( false ),
-        M_done_received( false ),
-        //
-        M_goalie_catch_ban( 0 ),
-        M_goalie_moves_since_catch( 0 ),
-        M_kick_cycles( 0 ),
-        M_dash_cycles( 0 ),
-        //
-        M_kick_count( 0 ),
-        M_dash_count( 0 ),
-        M_turn_count( 0 ),
-        M_catch_count( 0 ),
-        M_move_count( 0 ),
-        M_turn_neck_count( 0 ),
-        M_change_view_count( 0 ),
-        M_say_count( 0 ),
-        M_arm( ServerParam::instance().pointToBan(),
-               ServerParam::instance().pointToDuration() ),
-        M_attentionto_count( 0 ),
-        M_tackle_cycles( 0 ),
-        M_tackle_count( 0 ),
-        M_foul_cycles( 0 ),
-        M_foul_count( 0 )
+    : MPObject( stadium,
+                "", "",
+                O_TYPE_PLAYER_NAME, O_TYPE_PLAYER_NAME_SHORT ),
+      VISIBLE_DISTANCE( ServerParam::instance().visibleDistance() ),
+      VISIBLE_DISTANCE2( VISIBLE_DISTANCE * VISIBLE_DISTANCE ),
+      //
+      M_init_observer( new rcss::InitObserverPlayer ),
+      M_observer( new rcss::ObserverPlayer ),
+      M_body_observer( new rcss::BodyObserverPlayer ),
+      M_fullstate_observer( new rcss::FullStateObserver ),
+      M_parser( *this ),
+      //
+      M_version( 3.0 ),
+      M_team( team ),
+      M_side( team->side() ),
+      M_unum( number ),
+      M_goalie( false ),
+      //
+      M_unum_far_length( 20.0 ),
+      M_unum_too_far_length( 40.0 ),
+      M_team_far_length( 40.0 ),
+      M_team_too_far_length( 60.0 ),
+      //
+      M_clang_min_ver( 0 ),
+      M_clang_max_ver( 0 ),
+      //
+      M_player_type( NULL ),
+      M_player_type_id( 0 ),
+      M_substituted( false ),
+      M_kick_rand( ServerParam::instance().kickRand() ), // pfr 8/14/00: for RC2000 evaluation
+      //
+      M_state( DISABLE ),
+      M_card_count( 0 ),
+      //
+      M_synch_see( false ),
+      M_visual_send_interval( 4 ),
+      M_high_quality( true ),
+      M_visible_angle( Deg2Rad( ServerParam::instance().visibleAngleDegree() ) ),
+      M_view_width( rcss::pcom::NORMAL ),
+      //
+      M_hear_capacity_from_teammate( ServerParam::instance().hearMax() ),
+      M_hear_capacity_from_opponent( ServerParam::instance().hearMax() ),
+      //
+      M_stamina( ServerParam::instance().staminaMax() ),
+      M_recovery( ServerParam::instance().recoverInit() ),
+      M_effort( ServerParam::instance().effortInit() ),
+      M_stamina_capacity( ServerParam::instance().staminaCapacity() ),
+      M_consumed_stamina( 0.0 ),
+      //
+      M_angle_body( 0.0 ),
+      M_angle_body_committed( 0.0 ),
+      M_angle_neck( 0.0 ),
+      M_angle_neck_committed( 0.0 ),
+      //
+      M_ball_collide( false ),
+      M_player_collide( false ),
+      M_post_collide( false ),
+      //
+      M_command_done( false ),
+      M_turn_neck_done( false ),
+      M_done_received( false ),
+      //
+      M_goalie_catch_ban( 0 ),
+      M_goalie_moves_since_catch( 0 ),
+      M_kick_cycles( 0 ),
+      M_dash_cycles( 0 ),
+      //
+      M_kick_count( 0 ),
+      M_dash_count( 0 ),
+      M_turn_count( 0 ),
+      M_catch_count( 0 ),
+      M_move_count( 0 ),
+      M_turn_neck_count( 0 ),
+      M_change_view_count( 0 ),
+      M_say_count( 0 ),
+      M_arm( ServerParam::instance().pointToBan(),
+             ServerParam::instance().pointToDuration() ),
+      M_attentionto_count( 0 ),
+      M_tackle_cycles( 0 ),
+      M_tackle_count( 0 ),
+      M_foul_cycles( 0 ),
+      M_foul_count( 0 )
 {
     assert( team );
 
@@ -267,7 +267,7 @@ Player::~Player()
 }
 
 bool
-Player::init( const double & ver,
+Player::init( const double ver,
               const bool goalie )
 {
     M_version = ver;
@@ -404,7 +404,7 @@ Player::disable()
     }
 
     if ( isGoalie()
-            && this == M_stadium.ballCatcher() )
+         && this == M_stadium.ballCatcher() )
     {
         M_stadium.clearBallCatcher();
     }
@@ -447,6 +447,22 @@ Player::discard()
 }
 
 void
+Player::changeToGoalie()
+{
+    M_goalie = true;
+
+    setEnable();
+
+    {
+        char lname[128], sname[128];
+        snprintf( lname, 128, PLAYER_NAME_FORMAT, team()->name().c_str(), unum() );
+        snprintf( sname, 128, PLAYER_NAME_FORMAT_SHORT, team()->name().c_str(), unum(),
+                  isGoalie() ? GOALIE_VISUAL_STRING : "" );
+        setName( lname, sname );
+    }
+}
+
+void
 Player::parseMsg( char * msg,
                   const size_t & len )
 {
@@ -469,12 +485,11 @@ Player::parseMsg( char * msg,
         // Cygwin's flex/bison may cause problems.
         ! parseCommand( command )
 #endif
-    )
+        )
     {
         send( "(error illegal_command_form)" );
         std::cerr << "Error parsing >" << command << "<\n";
     }
-
 }
 
 bool
@@ -507,7 +522,7 @@ Player::parseCommand( const char * command )
         {
             double power = 0.0, dir = 0.0;
             if ( std::sscanf( buf, " ( dash %lf %lf ) %n ", &power, &dir, &n_read ) != 2
-                    && std::sscanf( buf, " ( dash %lf ) %n ", &power, &n_read ) != 1 )
+                 && std::sscanf( buf, " ( dash %lf ) %n ", &power, &n_read ) != 1 )
             {
                 std::cerr << "Error parsing >" << buf << "<\n";
                 return false;
@@ -550,8 +565,8 @@ Player::parseCommand( const char * command )
             buf += 5;
             char msg[MaxMesg];
             if ( *buf == '"'
-                    && std::sscanf( buf, " \"%[-0-9a-zA-Z ().+*/?<>_]\" ) %n ",
-                                    msg, &n_read ) == 1 )
+                 && std::sscanf( buf, " \"%[-0-9a-zA-Z ().+*/?<>_]\" ) %n ",
+                                 msg, &n_read ) == 1 )
             {
                 buf += n_read;
                 say( msg );
@@ -658,8 +673,8 @@ Player::parseCommand( const char * command )
             std::memset( foul_str, 0, 16 );
             if ( std::sscanf( buf, " ( tackle %lf %[^)] ) %n ",
                               &power_or_dir, foul_str, &n_read ) != 2
-                    && std::sscanf( buf, " ( tackle %lf ) %n ",
-                                    &power_or_dir, &n_read ) != 1 )
+                 && std::sscanf( buf, " ( tackle %lf ) %n ",
+                                 &power_or_dir, &n_read ) != 1 )
             {
                 std::cerr << "Error parsing >" << buf << "<\n";
                 return false;
@@ -668,7 +683,7 @@ Player::parseCommand( const char * command )
             if ( std::strlen( foul_str ) > 0 )
             {
                 if ( ! std::strcmp( foul_str, "on" )
-                        || ! std::strcmp( foul_str, "true" ) )
+                     || ! std::strcmp( foul_str, "true" ) )
                 {
                     tackle( power_or_dir, true );
                 }
@@ -728,8 +743,8 @@ Player::parseCommand( const char * command )
             double x, y;
             if ( std::sscanf( buf, " ( move %lf %lf ) %n ",
                               &x, &y, &n_read ) != 2
-                    && std::sscanf( buf, " ( move ( %lf %lf ) ) %n ",
-                                    &x, &y, &n_read ) != 2 )
+                 && std::sscanf( buf, " ( move ( %lf %lf ) ) %n ",
+                                 &x, &y, &n_read ) != 2 )
             {
                 std::cerr << "Error parsing >" << buf << "<\n";
                 return false;
@@ -749,8 +764,8 @@ Player::parseCommand( const char * command )
 
             if ( std::sscanf( buf, " ( change_view %15[^ )] %15[^ )] ) %n ",
                               width, quality, &n_read ) != 2
-                    && std::sscanf( buf, " ( change_view %15[^ )] ) %n ",
-                                    width, &n_read ) != 1 )
+                 && std::sscanf( buf, " ( change_view %15[^ )] ) %n ",
+                                 width, &n_read ) != 1 )
             {
                 std::cerr << "Error parsing >" << buf << "<\n";
                 return false;
@@ -867,8 +882,8 @@ Player::parseEar( const char * command )
                       onoff, team_str, mode_str, &n_read ) == 3 )
     {
         bool on = false;
-        if ( ! std::strcmp( onoff, "on" ) ) on = true;
-        else if ( ! std::strcmp( onoff, "off" ) ) on = false;
+        if( ! std::strcmp( onoff, "on" ) ) on = true;
+        else if( ! std::strcmp( onoff, "off" ) ) on = false;
         else return 0;
 
         if ( ! std::strcmp( team_str, "our" ) )
@@ -879,11 +894,11 @@ Player::parseEar( const char * command )
         {
             team_side = rcss::pcom::OPP;
         }
-        else if ( ! std::strcmp( team_str, "left" ) || ! std::strcmp( team_str, "l" ) )
+        else if( ! std::strcmp( team_str, "left" ) || ! std::strcmp( team_str, "l" ) )
         {
             team_side = rcss::pcom::LEFT_SIDE;
         }
-        else if ( ! std::strcmp( team_str, "right" ) || ! std::strcmp( team_str, "r" ) )
+        else if( ! std::strcmp( team_str, "right" ) || ! std::strcmp( team_str, "r" ) )
         {
             team_side = rcss::pcom::RIGHT_SIDE;
         }
@@ -892,7 +907,7 @@ Player::parseEar( const char * command )
         {
             mode = rcss::pcom::PARTIAL;
         }
-        else if ( ! std::strcmp( mode_str, "complete" ) || ! std::strcmp( mode_str, "c" ) )
+        else if( ! std::strcmp( mode_str, "complete" ) || ! std::strcmp( mode_str, "c" ) )
         {
             mode = rcss::pcom::COMPLETE;
         }
@@ -909,7 +924,7 @@ Player::parseEar( const char * command )
     {
         bool on;
         if ( ! std::strcmp( onoff, "on" ) ) on = true;
-        else if ( ! std::strcmp( onoff, "off" ) ) on = false;
+        else if( ! std::strcmp( onoff, "off" ) ) on = false;
         else return 0;
 
         if ( ! std::strcmp( team_str, "our" ) )
@@ -932,7 +947,7 @@ Player::parseEar( const char * command )
         {
             mode = rcss::pcom::PARTIAL;
         }
-        else if ( ! std::strcmp( mode_str, "complete" ) || ! std::strcmp( mode_str, "c" ) )
+        else if( ! std::strcmp( mode_str, "complete" ) || ! std::strcmp( mode_str, "c" ) )
         {
             mode = rcss::pcom::COMPLETE;
         }
@@ -945,7 +960,7 @@ Player::parseEar( const char * command )
     {
         bool on;
         if ( ! std::strcmp( onoff, "on" ) ) on = true;
-        else if ( ! std::strcmp( onoff, "off" ) ) on = false;
+        else if( ! std::strcmp( onoff, "off" ) ) on = false;
         else return 0;
 
         ear( on, rcss::pcom::UNKNOWN_TEAM, std::string(), rcss::pcom::UNKNOWN_EAR_MODE );
@@ -1052,13 +1067,13 @@ Player::dash( double power,
                                                        * ( 1.0 - ( std::fabs( dir ) - 90.0 ) / 90.0 ) )
                             : param.sideDashRate() + ( ( 1.0 - param.sideDashRate() )
                                                        * ( 1.0 - std::fabs( dir ) / 90.0 ) )
-                          );
+                            );
         dir_rate = rcss::bound( 0.0, dir_rate, 1.0 );
 
         double effective_dash_power = std::fabs( effort()
-                                      * power
-                                      * dir_rate
-                                      * M_player_type->dashPowerRate() );
+                                                 * power
+                                                 * dir_rate
+                                                 * M_player_type->dashPowerRate() );
         if ( pos().y < 0.0 )
         {
             effective_dash_power /= ( side() == LEFT
@@ -1153,21 +1168,21 @@ Player::kick( double power,
     M_state |= KICK;
 
     if ( M_stadium.playmode() == PM_BeforeKickOff ||
-            M_stadium.playmode() == PM_AfterGoal_Left ||
-            M_stadium.playmode() == PM_AfterGoal_Right ||
-            M_stadium.playmode() == PM_OffSide_Left ||
-            M_stadium.playmode() == PM_OffSide_Right ||
-            M_stadium.playmode() == PM_Foul_Charge_Left ||
-            M_stadium.playmode() == PM_Foul_Charge_Right ||
-            M_stadium.playmode() == PM_Foul_Push_Left ||
-            M_stadium.playmode() == PM_Foul_Push_Right ||
-            M_stadium.playmode() == PM_Back_Pass_Left ||
-            M_stadium.playmode() == PM_Back_Pass_Right ||
-            M_stadium.playmode() == PM_Free_Kick_Fault_Left ||
-            M_stadium.playmode() == PM_Free_Kick_Fault_Right ||
-            M_stadium.playmode() == PM_CatchFault_Left ||
-            M_stadium.playmode() == PM_CatchFault_Right ||
-            M_stadium.playmode() == PM_TimeOver )
+         M_stadium.playmode() == PM_AfterGoal_Left ||
+         M_stadium.playmode() == PM_AfterGoal_Right ||
+         M_stadium.playmode() == PM_OffSide_Left ||
+         M_stadium.playmode() == PM_OffSide_Right ||
+         M_stadium.playmode() == PM_Foul_Charge_Left ||
+         M_stadium.playmode() == PM_Foul_Charge_Right ||
+         M_stadium.playmode() == PM_Foul_Push_Left ||
+         M_stadium.playmode() == PM_Foul_Push_Right ||
+         M_stadium.playmode() == PM_Back_Pass_Left ||
+         M_stadium.playmode() == PM_Back_Pass_Right ||
+         M_stadium.playmode() == PM_Free_Kick_Fault_Left ||
+         M_stadium.playmode() == PM_Free_Kick_Fault_Right ||
+         M_stadium.playmode() == PM_CatchFault_Left ||
+         M_stadium.playmode() == PM_CatchFault_Right ||
+         M_stadium.playmode() == PM_TimeOver )
     {
         M_state |= KICK_FAULT;
         return;
@@ -1183,14 +1198,14 @@ Player::kick( double power,
     double dir_diff = std::fabs( angleFromBody( M_stadium.ball() ) );
     PVector rpos = M_stadium.ball().pos() - this->pos();
     double dist_ball
-    = rpos.r()
-      - M_player_type->playerSize()
-      - ServerParam::instance().ballSize();
+        = rpos.r()
+        - M_player_type->playerSize()
+        - ServerParam::instance().ballSize();
 
     double eff_power
-    = power
-      * M_player_type->kickPowerRate()
-      * (1.0 - 0.25*dir_diff/M_PI - 0.25*dist_ball/M_player_type->kickableMargin());
+        = power
+        * M_player_type->kickPowerRate()
+        * (1.0 - 0.25*dir_diff/M_PI - 0.25*dist_ball/M_player_type->kickableMargin());
 
     PVector accel = PVector::fromPolar( eff_power,
                                         dir + angleBodyCommitted() );
@@ -1215,21 +1230,21 @@ Player::kick( double power,
 
     // [0.5, 1.0]
     double pos_rate
-    = 0.5
-      + 0.25 * ( dir_diff/M_PI + dist_ball/M_player_type->kickableMargin() );
+        = 0.5
+        + 0.25 * ( dir_diff/M_PI + dist_ball/M_player_type->kickableMargin() );
     // [0.5, 1.0]
     double speed_rate
-    = 0.5
-      + 0.5 * ( M_stadium.ball().vel().r()
-                / ( ServerParam::instance().ballSpeedMax()
-                    * ServerParam::instance().ballDecay() ) );
+        = 0.5
+        + 0.5 * ( M_stadium.ball().vel().r()
+                  / ( ServerParam::instance().ballSpeedMax()
+                      * ServerParam::instance().ballDecay() ) );
     // [0, 2*kick_rand]
     double max_rand
-    = M_kick_rand
-      * ( power / ServerParam::instance().maxPower() )
-      * ( pos_rate + speed_rate );
+        = M_kick_rand
+        * ( power / ServerParam::instance().maxPower() )
+        * ( pos_rate + speed_rate );
     PVector kick_noise = PVector::fromPolar( drand( 0.0, max_rand ),
-                         drand( -M_PI, M_PI ) );
+                                             drand( -M_PI, M_PI ) );
     accel += kick_noise;
 
     //             std::cout << M_stadium.time()
@@ -1284,21 +1299,21 @@ Player::doLongKick()
     }
 
     if ( M_stadium.playmode() == PM_BeforeKickOff ||
-            M_stadium.playmode() == PM_AfterGoal_Left ||
-            M_stadium.playmode() == PM_AfterGoal_Right ||
-            M_stadium.playmode() == PM_OffSide_Left ||
-            M_stadium.playmode() == PM_OffSide_Right ||
-            M_stadium.playmode() == PM_Foul_Charge_Left ||
-            M_stadium.playmode() == PM_Foul_Charge_Right ||
-            M_stadium.playmode() == PM_Foul_Push_Left ||
-            M_stadium.playmode() == PM_Foul_Push_Right ||
-            M_stadium.playmode() == PM_Back_Pass_Left ||
-            M_stadium.playmode() == PM_Back_Pass_Right ||
-            M_stadium.playmode() == PM_Free_Kick_Fault_Left ||
-            M_stadium.playmode() == PM_Free_Kick_Fault_Right ||
-            M_stadium.playmode() == PM_CatchFault_Left ||
-            M_stadium.playmode() == PM_CatchFault_Right ||
-            M_stadium.playmode() == PM_TimeOver )
+         M_stadium.playmode() == PM_AfterGoal_Left ||
+         M_stadium.playmode() == PM_AfterGoal_Right ||
+         M_stadium.playmode() == PM_OffSide_Left ||
+         M_stadium.playmode() == PM_OffSide_Right ||
+         M_stadium.playmode() == PM_Foul_Charge_Left ||
+         M_stadium.playmode() == PM_Foul_Charge_Right ||
+         M_stadium.playmode() == PM_Foul_Push_Left ||
+         M_stadium.playmode() == PM_Foul_Push_Right ||
+         M_stadium.playmode() == PM_Back_Pass_Left ||
+         M_stadium.playmode() == PM_Back_Pass_Right ||
+         M_stadium.playmode() == PM_Free_Kick_Fault_Left ||
+         M_stadium.playmode() == PM_Free_Kick_Fault_Right ||
+         M_stadium.playmode() == PM_CatchFault_Left ||
+         M_stadium.playmode() == PM_CatchFault_Right ||
+         M_stadium.playmode() == PM_TimeOver )
     {
         M_state |= KICK_FAULT;
         return;
@@ -1314,34 +1329,34 @@ Player::doLongKick()
     double dir_diff = std::fabs( angleFromBody( M_stadium.ball() ) );
     PVector rpos = M_stadium.ball().pos() - this->pos();
     double dist_ball
-    = rpos.r()
-      - M_player_type->playerSize()
-      - ServerParam::instance().ballSize();
+        = rpos.r()
+        - M_player_type->playerSize()
+        - ServerParam::instance().ballSize();
 
     double eff_power = M_long_kick_power
-                       * ( M_player_type->kickPowerRate() * ServerParam::instance().longKickPowerFactor() )
-                       * (1.0 - 0.25*dir_diff/M_PI - 0.25*dist_ball/M_player_type->kickableMargin());
+        * ( M_player_type->kickPowerRate() * ServerParam::instance().longKickPowerFactor() )
+        * (1.0 - 0.25*dir_diff/M_PI - 0.25*dist_ball/M_player_type->kickableMargin());
 
     PVector accel = PVector::fromPolar( eff_power,
                                         M_long_kick_dir + angleBodyCommitted() );
 
     // [0.5, 1.0]
     double pos_rate
-    = 0.5
-      + 0.25 * ( dir_diff/M_PI + dist_ball/M_player_type->kickableMargin() );
+        = 0.5
+        + 0.25 * ( dir_diff/M_PI + dist_ball/M_player_type->kickableMargin() );
     // [0.5, 1.0]
     double speed_rate
-    = 0.5
-      + 0.5 * ( M_stadium.ball().vel().r()
-                / ( ServerParam::instance().ballSpeedMax()
-                    * ServerParam::instance().ballDecay() ) );
+        = 0.5
+        + 0.5 * ( M_stadium.ball().vel().r()
+                  / ( ServerParam::instance().ballSpeedMax()
+                      * ServerParam::instance().ballDecay() ) );
     // [0, 2*kick_rand]
     double max_rand
-    = M_kick_rand
-      * ( M_long_kick_power / ServerParam::instance().maxPower() )
-      * ( pos_rate + speed_rate );
+        = M_kick_rand
+        * ( M_long_kick_power / ServerParam::instance().maxPower() )
+        * ( pos_rate + speed_rate );
     PVector kick_noise = PVector::fromPolar( drand( 0.0, max_rand ),
-                         drand( -M_PI, M_PI ) );
+                                             drand( -M_PI, M_PI ) );
     accel += kick_noise;
 
     M_stadium.kickTaken( *this, accel );
@@ -1364,10 +1379,10 @@ Player::goalieCatch( double dir )
     //tom: actually the goalie can catch the ball in any playmode, but
     //infringements should be awarded.  Maybe later.
     if ( ! this->isGoalie()
-            || M_goalie_catch_ban > 0
-            || ( M_stadium.playmode() != PM_PlayOn
-                 && ! Referee::isPenaltyShootOut( M_stadium.playmode() ) )
-       )
+         || M_goalie_catch_ban > 0
+         || ( M_stadium.playmode() != PM_PlayOn
+              && ! Referee::isPenaltyShootOut( M_stadium.playmode() ) )
+         )
     {
         M_state |= CATCH_FAULT;
         return;
@@ -1404,7 +1419,7 @@ Player::goalieCatch( double dir )
     rotated_pos.rotate( -( angleBodyCommitted() + NormalizeMoment( dir ) ) );
 
     if ( ! catchable.inArea( rotated_pos )
-            || drand( 0, 1 ) >= ServerParam::instance().catchProb() )
+         || drand( 0, 1 ) >= ServerParam::instance().catchProb() )
     {
         M_state |= CATCH_FAULT;
         return;
@@ -1464,8 +1479,8 @@ Player::goalieCatch( double dir )
         //success = ( drand( 0, 1 ) <= SP.catchProb() );
         boost::bernoulli_distribution<> rng( SP.catchProbability() );
         boost::variate_generator< rcss::random::DefaultRNG &,
-        boost::bernoulli_distribution<> >
-        dst( rcss::random::DefaultRNG::instance(), rng );
+            boost::bernoulli_distribution<> >
+            dst( rcss::random::DefaultRNG::instance(), rng );
         success = dst();
         //std::cerr << M_stadium.time()
         //          << ": goalieCatch min_catchable ok" << std::endl;
@@ -1473,16 +1488,16 @@ Player::goalieCatch( double dir )
     else
     {
         double catch_prob
-        = SP.catchProbability()
-          - SP.catchProbability() * ( ( rotated_pos.x - this_catch_area_l_min )
-                                      / ( this_catch_area_l_max - this_catch_area_l_min ) );
+            = SP.catchProbability()
+            - SP.catchProbability() * ( ( rotated_pos.x - this_catch_area_l_min )
+                                        / ( this_catch_area_l_max - this_catch_area_l_min ) );
         catch_prob = std::min( std::max( 0.0, catch_prob ), 1.0 );
 
         //success = ( drand( 0, 1 ) <= catch_prob );
         boost::bernoulli_distribution<> rng( catch_prob );
         boost::variate_generator< rcss::random::DefaultRNG &,
-        boost::bernoulli_distribution<> >
-        dst( rcss::random::DefaultRNG::instance(), rng );
+            boost::bernoulli_distribution<> >
+            dst( rcss::random::DefaultRNG::instance(), rng );
         success = dst();
         //std::cerr << M_stadium.time()
         //          << ": goalieCatch "
@@ -1568,11 +1583,11 @@ Player::move( double x,
     }
 
     if ( M_stadium.playmode() == PM_BeforeKickOff ||
-            M_stadium.playmode() == PM_AfterGoal_Right ||
-            M_stadium.playmode() == PM_AfterGoal_Left
-            //|| M_stadium.playmode() == PM_PenaltySetup_Left
-            //|| M_stadium.playmode() == PM_PenaltySetup_Right
-       )
+         M_stadium.playmode() == PM_AfterGoal_Right ||
+         M_stadium.playmode() == PM_AfterGoal_Left
+         //|| M_stadium.playmode() == PM_PenaltySetup_Left
+         //|| M_stadium.playmode() == PM_PenaltySetup_Right
+         )
     {
         M_pos.x = x * side();
         M_pos.y = y * side();
@@ -1583,7 +1598,7 @@ Player::move( double x,
               && M_stadium.ballCatcher() == this )
     {
         if ( ServerParam::instance().goalieMaxMoves() < 0
-                || M_goalie_moves_since_catch < ServerParam::instance().goalieMaxMoves() )
+             || M_goalie_moves_since_catch < ServerParam::instance().goalieMaxMoves() )
         {
             M_pos.x = x * side();
             M_pos.y = y * side();
@@ -1608,7 +1623,7 @@ Player::change_view( rcss::pcom::VIEW_WIDTH viewWidth,
                      rcss::pcom::VIEW_QUALITY viewQuality )
 {
     if ( M_synch_see
-            && viewQuality != rcss::pcom::HIGH  )
+         && viewQuality != rcss::pcom::HIGH  )
     {
         return;
     }
@@ -1919,12 +1934,12 @@ Player::tackle( double power_or_angle,
 
         const Stadium::PlayerCont::const_iterator end = M_stadium.players().end();
         for ( Stadium::PlayerCont::const_iterator p = M_stadium.players().begin();
-                p != end;
-                ++p )
+              p != end;
+              ++p )
         {
             if ( (*p)->isEnabled()
-                    && (*p)->side() != this->side()
-                    && (*p)->ballKickable() )
+                 && (*p)->side() != this->side()
+                 && (*p)->ballKickable() )
             {
                 foul = true;
                 exponent = ServerParam::instance().foulExponent();
@@ -1943,27 +1958,27 @@ Player::tackle( double power_or_angle,
     {
         boost::bernoulli_distribution<> rng( 1 - prob );
         boost::variate_generator< rcss::random::DefaultRNG &,
-        boost::bernoulli_distribution<> >
-        dst( rcss::random::DefaultRNG::instance(), rng );
+            boost::bernoulli_distribution<> >
+            dst( rcss::random::DefaultRNG::instance(), rng );
 
         if ( dst() )
         {
             M_state |= TACKLE;
 
             if ( M_stadium.playmode() == PM_BeforeKickOff ||
-                    M_stadium.playmode() == PM_AfterGoal_Left ||
-                    M_stadium.playmode() == PM_AfterGoal_Right  ||
-                    M_stadium.playmode() == PM_OffSide_Left ||
-                    M_stadium.playmode() == PM_OffSide_Right ||
-                    M_stadium.playmode() == PM_Foul_Charge_Left ||
-                    M_stadium.playmode() == PM_Foul_Charge_Right ||
-                    M_stadium.playmode() == PM_Foul_Push_Left ||
-                    M_stadium.playmode() == PM_Foul_Push_Right ||
-                    M_stadium.playmode() == PM_Back_Pass_Left ||
-                    M_stadium.playmode() == PM_Back_Pass_Right ||
-                    M_stadium.playmode() == PM_Free_Kick_Fault_Left ||
-                    M_stadium.playmode() == PM_Free_Kick_Fault_Right ||
-                    M_stadium.playmode() == PM_TimeOver )
+                 M_stadium.playmode() == PM_AfterGoal_Left ||
+                 M_stadium.playmode() == PM_AfterGoal_Right  ||
+                 M_stadium.playmode() == PM_OffSide_Left ||
+                 M_stadium.playmode() == PM_OffSide_Right ||
+                 M_stadium.playmode() == PM_Foul_Charge_Left ||
+                 M_stadium.playmode() == PM_Foul_Charge_Right ||
+                 M_stadium.playmode() == PM_Foul_Push_Left ||
+                 M_stadium.playmode() == PM_Foul_Push_Right ||
+                 M_stadium.playmode() == PM_Back_Pass_Left ||
+                 M_stadium.playmode() == PM_Back_Pass_Right ||
+                 M_stadium.playmode() == PM_Free_Kick_Fault_Left ||
+                 M_stadium.playmode() == PM_Free_Kick_Fault_Right ||
+                 M_stadium.playmode() == PM_TimeOver )
             {
                 return;
             }
@@ -1982,14 +1997,14 @@ Player::tackle( double power_or_angle,
             {
                 double angle = NormalizeMoment( power_or_angle );
                 double eff_power
-                = ( ServerParam::instance().maxBackTacklePower()
-                    + ( ( ServerParam::instance().maxTacklePower()
-                          - ServerParam::instance().maxBackTacklePower() )
-                        * ( 1.0 - ( std::fabs( angle ) / M_PI ) )
-                        //* ( 1.0 - std::pow( std::fabs( angle ) / M_PI, 2.0 ) )
-                      )
-                  )
-                  * ServerParam::instance().tacklePowerRate();
+                    = ( ServerParam::instance().maxBackTacklePower()
+                        + ( ( ServerParam::instance().maxTacklePower()
+                              - ServerParam::instance().maxBackTacklePower() )
+                            * ( 1.0 - ( std::fabs( angle ) / M_PI ) )
+                            //* ( 1.0 - std::pow( std::fabs( angle ) / M_PI, 2.0 ) )
+                            )
+                        )
+                    * ServerParam::instance().tacklePowerRate();
 
                 eff_power *= 1.0 - 0.5*( std::fabs( player_2_ball.th() ) / M_PI );
 
@@ -2058,21 +2073,20 @@ Player::tackle( double power_or_angle,
             double pos_rate = 0.5 + 0.5*( 1.0 - prob );
             // [0.5, 1]
             double speed_rate
-            = 0.5
-              + 0.5 * ( M_stadium.ball().vel().r()
-                        / ( ServerParam::instance().ballSpeedMax()
-                            * ServerParam::instance().ballDecay() ) );
+                = 0.5
+                + 0.5 * ( M_stadium.ball().vel().r()
+                          / ( ServerParam::instance().ballSpeedMax()
+                              * ServerParam::instance().ballDecay() ) );
             // [0, 2*tackle_rand]
             // tackle_rand = kick_rand * server::tackle_rand_factor
             double max_rand = M_kick_rand * ServerParam::instance().tackleRandFactor()
-                              * power_rate
-                              * ( pos_rate + speed_rate );
+                * power_rate
+                * ( pos_rate + speed_rate );
             PVector tackle_noise = PVector::fromPolar( drand( 0.0, max_rand ),
-                                   drand( -M_PI, M_PI ) );
+                                                       drand( -M_PI, M_PI ) );
             accel += tackle_noise;
 
-            M_stadium.kickTaken( *this, accel );
-            M_stadium.tackleTaken( *this, foul );
+            M_stadium.tackleTaken( *this, accel, foul );
         }
         else
         {
@@ -2100,9 +2114,9 @@ Player::clang( int min, int max )
 
     sendOKClang();
 
-    if ( M_team != NULL
-            && team()->olcoach() != NULL
-            && team()->olcoach()->assigned() )
+    if( M_team != NULL
+        && team()->olcoach() != NULL
+        && team()->olcoach()->assigned() )
     {
         M_team->olcoach()->sendPlayerClangVer( *this );
     }
@@ -2174,7 +2188,7 @@ Player::ear( bool on,
 }
 
 // 2008-02-09 akiyama
-// comand to change the see message timer
+// command to change the see message timer
 void
 Player::synch_see()
 {
@@ -2255,7 +2269,7 @@ Player::setSenders()
 {
     rcss::SerializerPlayer::Creator ser_cre;
     if ( ! rcss::SerializerPlayer::factory().getCreator( ser_cre,
-            (int)version() ) )
+                                                         (int)version() ) )
     {
         std::cerr << "No SerializerPlayer::Creator v" << version() << std::endl;
         return false;
@@ -2269,11 +2283,11 @@ Player::setSenders()
     }
 
     rcss::BodySenderPlayer::Params body_params( getTransport(),
-            *this,
-            ser );
+                                                *this,
+                                                ser );
     rcss::BodySenderPlayer::Creator body_cre;
     if ( ! rcss::BodySenderPlayer::factory().getCreator( body_cre,
-            (int)version() ) )
+                                                         (int)version() ) )
     {
         std::cerr << "No BodySenderPlayer::Creator v" << version() << std::endl;
         return false;
@@ -2281,12 +2295,12 @@ Player::setSenders()
     M_body_observer->setBodySender( body_cre( body_params ) );
 
     rcss::VisualSenderPlayer::Params visual_params( getTransport(),
-            *this,
-            ser,
-            M_stadium );
+                                                    *this,
+                                                    ser,
+                                                    M_stadium );
     rcss::VisualSenderPlayer::Creator vis_cre;
     if ( ! rcss::VisualSenderPlayer::factory().getCreator( vis_cre,
-            (int)version() ) )
+                                                           (int)version() ) )
     {
         std::cerr << "No VisualSenderPlayer::Creator v" << version() << std::endl;
         return false;
@@ -2295,12 +2309,12 @@ Player::setSenders()
 
 
     rcss::InitSenderPlayer::Params init_params( getTransport(),
-            *this,
-            ser,
-            M_stadium );
+                                                *this,
+                                                ser,
+                                                M_stadium );
     rcss::InitSenderPlayer::Creator init_cre;
     if ( ! rcss::InitSenderPlayer::factory().getCreator( init_cre,
-            (int)version() ) )
+                                                         (int)version() ) )
     {
         std::cerr << "No InitSenderPlayer::Creator v" << version() << std::endl;
         return false;
@@ -2309,12 +2323,12 @@ Player::setSenders()
 
 
     rcss::FullStateSenderPlayer::Params fs_params( getTransport(),
-            *this,
-            ser,
-            M_stadium );
+                                                   *this,
+                                                   ser,
+                                                   M_stadium );
     rcss::FullStateSenderPlayer::Creator full_cre;
     if ( ! rcss::FullStateSenderPlayer::factory().getCreator( full_cre,
-            (int)version() ) )
+                                                              (int)version() ) )
     {
         std::cerr << "No FullSenderPlayer::Creator v" << version() << std::endl;
         return false;
@@ -2323,12 +2337,12 @@ Player::setSenders()
 
 
     rcss::AudioSenderPlayer::Params audio_params( getTransport(),
-            *this,
-            ser,
-            M_stadium );
+                                                  *this,
+                                                  ser,
+                                                  M_stadium );
     rcss::AudioSenderPlayer::Creator audio_cre;
     if ( ! rcss::AudioSenderPlayer::factory().getCreator( audio_cre,
-            (int)version() ) )
+                                                          (int)version() ) )
     {
         std::cerr << "No AudioSenderPlayer::Creator v" << version() << std::endl;
         return false;
@@ -2514,7 +2528,7 @@ void
 Player::updateCapacity()
 {
     M_hear_capacity_from_teammate += ServerParam::instance().hearInc();
-    if ( M_hear_capacity_from_teammate > (int)ServerParam::instance().hearMax() )
+    if( M_hear_capacity_from_teammate > (int)ServerParam::instance().hearMax() )
     {
         M_hear_capacity_from_teammate = ServerParam::instance().hearMax();
     }
@@ -2535,8 +2549,8 @@ double
 Player::kickableArea() const
 {
     return M_player_type->playerSize()
-           + ServerParam::instance().ballSize() //M_stadium.ball().size()
-           + M_player_type->kickableMargin();
+        + ServerParam::instance().ballSize() //M_stadium.ball().size()
+        + M_player_type->kickableMargin();
 }
 
 bool
@@ -2583,8 +2597,8 @@ Player::resetCommandFlags()
     }
 
     if ( M_kick_cycles <= 0
-            && tackleCycles() == 0
-            && foulCycles() == 0 )
+         && tackleCycles() == 0
+         && foulCycles() == 0 )
     {
         M_command_done = false;
     }

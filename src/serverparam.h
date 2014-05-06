@@ -468,9 +468,7 @@ private:
     
     //light
     bool M_light_response;
-    bool M_light_response_with_angle;
-    bool M_light_response_with_angles;
-    
+
 #ifdef NEW_QSTEP
     double dir_qstep; /* quantize step of direction */
     //private:
@@ -652,7 +650,7 @@ private:
     void setRedCardProbability( double value );
 
     void setSlowDownFactor();
-    
+
 public:
 
     const VerMap & verMap() const
@@ -958,8 +956,6 @@ public:
     
     // light
     bool lightResponse() const { return M_light_response; }
-    bool lightResponseWithAngle() const { return M_light_response_with_angle; }
-    bool lightResponseWithAngles() const { return M_light_response_with_angles; }
 
 };
 

@@ -70,8 +70,8 @@ main( int argc, char *argv[] )
     sig_action.sa_handler = &sigHandle;
     sig_action.sa_flags = 0;
     if ( sigaction( SIGINT, &sig_action , NULL ) != 0
-            || sigaction( SIGTERM, &sig_action , NULL ) != 0
-            || sigaction( SIGHUP, &sig_action , NULL ) != 0 )
+         || sigaction( SIGTERM, &sig_action , NULL ) != 0
+         || sigaction( SIGHUP, &sig_action , NULL ) != 0 )
     {
         std::cerr << __FILE__ << ": " << __LINE__
                   << ": could not set signal handler: "
@@ -101,12 +101,6 @@ main( int argc, char *argv[] )
     std::cout << "\nLight response: "
               << (ServerParam::instance().lightResponse()?"true":"false")
               << std::endl;
-    std::cout << "Light response with angle: "
-              << (ServerParam::instance().lightResponseWithAngle()?"true":"false")
-              << std::endl;
-    std::cout << "Light response with angles: "
-              << (ServerParam::instance().lightResponseWithAngles()?"true":"false")
-              << std::endl << std::endl;
 
     timer->run();
 

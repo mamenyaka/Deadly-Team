@@ -237,7 +237,7 @@ const int ServerParam::TEXT_LOG_FIXED = false;
 const int ServerParam::GAME_LOG_FIXED = false;
 const int ServerParam::TEXT_LOG_DATED = true;
 const int ServerParam::GAME_LOG_DATED = true;
-const std::string ServerParam::LOG_DATE_FORMAT = "%Y%m%d%H%M-";
+const std::string ServerParam::LOG_DATE_FORMAT = "%Y%m%d%H%M%S-";
 const int ServerParam::LOG_TIMES = false;
 const int ServerParam::RECORD_MESSAGES = false;
 const int ServerParam::TEXT_LOG_COMPRESSION = 0;
@@ -914,8 +914,6 @@ ServerParam::addParams()
 
     // light
     addParam( "light_response", M_light_response, "", 16 );
-    addParam( "light_response_with_angle", M_light_response_with_angle, "", 27 );
-    addParam( "light_response_with_angles", M_light_response_with_angles, "", 28 );
 
 }
 
@@ -1386,9 +1384,7 @@ ServerParam::setDefaults()
 
     // light
     M_light_response = false;
-    M_light_response_with_angle = false;
-    M_light_response_with_angles = false;
-    
+
 //     std::string module_dir = S_MODULE_DIR;
 //     for ( std::string::size_type pos = module_dir.find( "//" );
 //           pos != std::string::npos;
