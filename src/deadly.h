@@ -65,7 +65,7 @@
 #include <cmath>
 #include <deadlyformations.h>
 
-const double PI = 3.14159265359;
+const double PI = M_PI;
 
 enum RefereePlayMode
 {
@@ -134,12 +134,12 @@ public:
 
     this->estx = x + (x - oldx)*2.5;
     this->esty = y + (y - oldy)*2.5;
-    
+
     if (this->estx > 52.5)
       this->estx = 52.0;
     if (this->estx < -52.5)
       this->estx = -52.0;
-    
+
     if (this->esty > 34.0)
       this->esty = 33.5;
     if (this->esty < -34.0)
@@ -225,12 +225,6 @@ public:
       {50.0, 39.0}, {40.0, 39.0}, {30.0, 39.0}, {20.0, 39.0}, {10.0, 39.0}, {0.0, 39.0},
       {-10.0, 39.0}, {-20.0, 39.0}, {-30.0, 39.0}, {-40.0, 39.0}, {-50.0, 39.0}
     };
-
-    side = 1;
-    pass = dash = 0;
-    nowheretogo = false;
-    bigball_time = dash_time = pass_hear_time = dash_hear_time = -10;
-    bigplayers = 0;
   };
 
   ~DeadlyLexer()
@@ -242,7 +236,7 @@ public:
   }
 
   SeenObject *flags, *own_team, *other_team, *ball;
-  bool nowheretogo;
+  bool nowheretogo = false;
 
   virtual int yylex();
 
@@ -478,7 +472,12 @@ public:
 
   double calcAng(double x, double y)
   {
-    double angle = std::atan2((get_y() - y), (get_x() - x)) * 180.0 / PI - get_ang();
+    double angle = std::atan((get_y() - y)/(get_x() - x)) * 180.0 / PI - get_ang();
+
+    if (x < get_x())
+      angle += 180.0;
+    if (angle > 180.0)
+      angle -= 360.0;
 
     return angle;
   }
@@ -491,12 +490,13 @@ public:
 private:
   std::string team;
   RefereePlayMode play_mode;
-  int time, bigball_time, bigplayers, dash_time, pass_hear_time, dash_hear_time;
-  int side, squad_number, stamina;
+  int time, bigball_time = -10, dash_time = -10, pass_hear_time = -10, dash_hear_time = -10;
+  int bigplayers = 0;
+  int side = 1, squad_number, stamina;
   char lr;
   int quality, width;
   double estx, esty, esta, estha;
-  int pass, dash;
+  int pass = 0, dash = 0;
 
   char teamname_buffer[128];
   int squadnumber_buffer, pass_buffer, dash_buffer;

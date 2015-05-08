@@ -128,7 +128,7 @@ public:
   ~Client()
   {
     close();
-    
+
     sprintf(buf, "Server down: %s player %d exited\n", dl.get_team().c_str(), dl.get_squad_number());
     std::cerr << buf;
   }
@@ -329,7 +329,7 @@ private:
 
     FD_ZERO( &read_fds );
     FD_SET( M_socket.getFD(), &read_fds );
-    
+
 #ifdef RCSS_WIN
     int max_fd = 0;
 #else
@@ -354,13 +354,13 @@ private:
         rcss::net::Addr from;
         int len = M_socket.recv( buf, sizeof( buf ) - 1, from );
         if ( len == -1
-          && errno != EWOULDBLOCK )
+             && errno != EWOULDBLOCK )
         {
           if ( errno != ECONNREFUSED )
           {
             std::cerr << __FILE__ << ": " << __LINE__
-            << ": Error receiving from socket: "
-            << strerror( errno ) << std::endl;
+                      << ": Error receiving from socket: "
+                      << strerror( errno ) << std::endl;
           }
           M_socket.close();
         }
