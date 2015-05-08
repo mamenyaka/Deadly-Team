@@ -10,9 +10,12 @@ simulated autonomous robotic players to play soccer (football).
 QUICK START
 ===========
 
+Please insall Bison 2.5 from:
+http://ftp.gnu.org/gnu/bison
+
 From the rcssserver directory execute:
 
-`./configure'
+`./configure --with-boost-libdir=/usr/lib/x86_64-linux-gnu'
 `make'
 
 This will built the neccesary binaries to get you up and running.
