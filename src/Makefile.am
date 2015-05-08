@@ -283,8 +283,7 @@ rcssclient_LDADD = @RCSSCLIENT_LIBS@ \
 
 AM_CPPFLAGS = -I$(top_srcdir)
 AM_CFLAGS = -W -Wall
-#AM_CXXFLAGS = -W -Wall -Woverloaded-virtual
-AM_CXXFLAGS = -W -Wall
+AM_CXXFLAGS = -W -Wall -std=c++11
 
 
 EXTRA_DIST = \
@@ -296,21 +295,10 @@ EXTRA_DIST = \
 
 CLEANFILES = \
 	coach_lang_parser.cpp \
-	coach_lang_parser.h \
 	coach_lang_tok.cpp \
 	player_command_parser.cpp \
-	player_command_parser.h \
 	player_command_tok.cpp \
-	*~ \
 	core
 
 DISTCLEANFILES = \
 	rcsoccersim
-
-#MAINTAINERCLEANFILES = \
-#	coach_lang_parser.cpp \
-#	coach_lang_parser.h \
-#	coach_lang_tok.cpp \
-#	player_command_parser.cpp \
-#	player_command_parser.h \
-#	player_command_tok.cpp
