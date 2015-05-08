@@ -1099,7 +1099,7 @@ Player::dash( double power,
 void
 Player::position(double x, double y )
 {
-    position( x, y , 0.0 );
+    position( x, y , 100.0 );
 }
 
 // This is a  simple copy of the above dash function

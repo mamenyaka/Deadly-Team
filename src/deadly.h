@@ -478,12 +478,7 @@ public:
 
   double calcAng(double x, double y)
   {
-    double angle = std::atan((get_y() - y)/(get_x() - x)) * 180.0 / PI - get_ang();
-
-    if (x < get_x())
-      angle += 180.0;
-    if (angle > 180.0)
-      angle -= 360.0;
+    double angle = std::atan2((get_y() - y), (get_x() - x)) * 180.0 / PI - get_ang();
 
     return angle;
   }
